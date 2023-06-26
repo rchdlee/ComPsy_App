@@ -6,22 +6,73 @@ const TestForm = (props) => {
   const hiddenBool = props.hidden;
   const display = hiddenBool ? "hidden" : "";
 
-  const fileName = props.testid;
-  // const dotIndex = fileName.indexOf(".");
-  // const fileNameNoExt = fileName.slice(0, dotIndex);
-
   const changeHandlerTest = (e) => {
-    console.log(e);
+    // console.log(e);
   };
 
   const blurHandlerTest = () => {
     console.log("blurred");
   };
 
+  const fileName = props.testid;
+
+  const formItems = props.inputData.map((field, index) => {
+    const fieldName = field.name;
+    const fieldOptions = field.options;
+
+    if (fieldOptions) {
+      fieldOptions.unshift("-- select --");
+    }
+
+    if (field.type === "input") {
+      console.log(`${fileName}${fieldName}`, "🍙");
+      return (
+        <div className="flex flex-col mt-4" key={index}>
+          <label htmlFor="">{fieldName}</label>
+          <input
+            {...props.register(`${fileName}${fieldName}`)}
+            onBlur={blurHandlerTest}
+            className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
+            type="text"
+          />
+        </div>
+      );
+    }
+    if (field.type === "select") {
+      // const fieldOptionsWithSelect = field.options;
+      // fieldOptionsWithSelect.unshift("-- select  --");
+      console.log(`${fileName}${fieldName}`, "🍘");
+
+      return (
+        <div className="flex flex-col mt-4" key={index}>
+          <label htmlFor="">{fieldName}</label>
+          <select
+            {...props.register(`${fileName}${fieldName}`)}
+            onChange={changeHandlerTest}
+            onBlur={blurHandlerTest}
+            className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
+          >
+            {fieldOptions.map((option) => {
+              return (
+                <option value={option} key={`${fieldName}${option}`}>
+                  {option}
+                </option>
+              );
+            })}
+            {/* <option value="SC007">SC007</option>
+            <option value="SC008">SC008</option>
+            <option value="SC009">SC009</option> */}
+          </select>
+        </div>
+      );
+    }
+  });
+
   return (
     <div className={`${display}`}>
       {/* <form className="text-white" action="" onSubmit={handleSubmit(onSubmit)}> */}
-      <div className="flex flex-col">
+      {formItems}
+      {/* <div className="flex flex-col">
         <label htmlFor="">{fileName} - Subject</label>
         <select
           {...props.register(`${fileName}subject`)}
@@ -76,7 +127,7 @@ const TestForm = (props) => {
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
           type="text"
         />
-      </div>
+      </div> */}
       {/* <input
         className="px-8 py-4 border-2 border-white mt-4 hover:bg-lilacBlue hover:text-blackTextLight"
         type="submit"

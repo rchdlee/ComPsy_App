@@ -8,18 +8,135 @@ import TestForm from "./TestForm";
 const IngestionMetadata = () => {
   const [selectedFileIndex, setSelectedFileIndex] = useState(0);
 
-  // const methods = useForm();
-  const { register, handleSubmit } = useForm();
+  const DUMMY_MISSING_METADATA = [
+    {
+      fileName: "file1.ext",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["1", "3", "5", "7"],
+          value: "3",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["1", "2", "3"],
+          value: "",
+        },
+        { name: "Session", type: "input", options: null, value: "" },
+        {
+          name: "Acquisition",
+          type: "select",
+          options: ["Interested", "Not Interested"],
+          value: "",
+        },
+        { name: "Administration", type: "input", options: null, value: "" },
+        { name: "Device", type: "input", options: null, value: "" },
+      ],
+    },
+    {
+      fileName: "file2.extt",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["2", "4", "6", "8"],
+          value: "",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["4", "5", "6"],
+          value: "",
+        },
+        { name: "Session", type: "input", options: null, value: "" },
+        {
+          name: "Acquisition",
+          type: "select",
+          options: ["Interested!", "Not Interested!"],
+          value: "Not Interested!",
+        },
+        { name: "Administration", type: "input", options: null, value: "" },
+        { name: "Device", type: "input", options: null, value: "" },
+      ],
+    },
+    {
+      fileName: "file3.exttt",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["2.5", "4.5", "6.5", "8.5"],
+          value: "",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["7", "8", "9"],
+          value: "",
+        },
+        { name: "Session", type: "input", options: null, value: "" },
+        {
+          name: "Acquisition",
+          type: "select",
+          options: ["Interested!!", "Not Interested!!"],
+          value: "",
+        },
+        {
+          name: "Administration",
+          type: "input",
+          options: null,
+          value: "test default value!",
+        },
+        { name: "Device", type: "input", options: null, value: "" },
+      ],
+    },
+  ];
 
-  const ingestedFiles = ["file1.exts", "file2.ext", "verycoolfile3.ext32"];
+  const defaultValues = {};
+
+  DUMMY_MISSING_METADATA.forEach((file) => {
+    const fields = file.fields;
+    const fileName = file.fileName;
+    const dotIndex = fileName.indexOf(".");
+    const fileNameNoExt = fileName.slice(0, dotIndex);
+    fields.forEach((field) => {
+      let defaultValue;
+      if (field.value === "" && field.type === "select") {
+        defaultValues[`${fileNameNoExt}${field.name}`] = "-- select --";
+      } else {
+        defaultValues[`${fileNameNoExt}${field.name}`] = field.value;
+      }
+    });
+  });
+
+  // const methods = useForm();
+  const { register, handleSubmit, watch } = useForm({
+    defaultValues: defaultValues,
+  });
+
+  const watchAllFields = watch();
+  console.log(watchAllFields, "🍰");
+
+  // const ingestedFiles = ["file1.exts", "file2.ext", "verycoolfile3.ext32"];
+
+  console.log(defaultValues, "🍵");
+
+  const ingestedFileNames = DUMMY_MISSING_METADATA.map((file) => {
+    return file.fileName;
+  });
   // remove extension; '.' in name (in register in form) seems to cause error in data parsing for react-hook-form
-  const ingestedFilesNoExt = ingestedFiles.map((file) => {
+  const ingestedFilesNoExt = ingestedFileNames.map((file) => {
     const dotIndex = file.indexOf(".");
     const fileNameNoExt = file.slice(0, dotIndex);
     return fileNameNoExt;
   });
   // for adding back extension in data object
-  const fileExts = ingestedFiles.map((file) => {
+  const fileExts = ingestedFileNames.map((file) => {
     const dotIndex = file.indexOf(".");
     const fileNameNoExt = file.slice(dotIndex);
     return fileNameNoExt;
@@ -46,7 +163,7 @@ const IngestionMetadata = () => {
             return [key.slice(idLength), value];
           })
       );
-      console.log(dataUnformatted, formDataFormatted);
+      // console.log(dataUnformatted, formDataFormatted);
 
       const fullDataObj = { ...idInfo, ...formDataFormatted };
       return fullDataObj;
@@ -54,7 +171,7 @@ const IngestionMetadata = () => {
     console.log(results);
   };
 
-  const filesTest = ingestedFiles.map((file, index) => {
+  const filesTest = ingestedFileNames.map((file, index) => {
     const selectedBool = +selectedFileIndex === index;
     const classes = `${
       selectedBool ? "border-2 border-white rounded" : ""
@@ -82,11 +199,19 @@ const IngestionMetadata = () => {
     );
   });
 
-  const formsTest = ingestedFilesNoExt.map((file, index) => {
+  // const formsTest = ingestedFilesNoExt.map((file, index) => {
+  const formsTest = DUMMY_MISSING_METADATA.map((file, index) => {
+    const fileName = file.fileName;
+    const dotIndex = fileName.indexOf(".");
+    const fileNameNoExt = fileName.slice(0, dotIndex);
+
+    const inputData = file.fields;
+
     return (
       <TestForm
         register={register}
-        testid={file}
+        testid={fileNameNoExt}
+        inputData={inputData}
         hidden={+selectedFileIndex !== index}
         key={index}
       />
