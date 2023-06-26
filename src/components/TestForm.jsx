@@ -1,4 +1,5 @@
-import { useFormContext } from "react-hook-form";
+// import { useFormContext } from "react-hook-form";
+import Select from "react-select";
 
 const TestForm = (props) => {
   // const { register } = useFormContext(); // retrieve all hook methods
@@ -20,12 +21,12 @@ const TestForm = (props) => {
     const fieldName = field.name;
     const fieldOptions = field.options;
 
-    if (fieldOptions) {
-      fieldOptions.unshift("-- select --");
-    }
+    // if (fieldOptions) {
+    //   fieldOptions.unshift("-- select --");
+    // }
 
     if (field.type === "input") {
-      console.log(`${fileName}${fieldName}`, "🍙");
+      // console.log(`${fileName}${fieldName}`, "🍙");
       return (
         <div className="flex flex-col mt-4" key={index}>
           <label htmlFor="">{fieldName}</label>
@@ -41,12 +42,49 @@ const TestForm = (props) => {
     if (field.type === "select") {
       // const fieldOptionsWithSelect = field.options;
       // fieldOptionsWithSelect.unshift("-- select  --");
-      console.log(`${fileName}${fieldName}`, "🍘");
+      // console.log(`${fileName}${fieldName}`, "🍘");
+      const selectOptions = field.options.map((option) => {
+        return { value: option, label: option };
+      });
+      // console.log(selectOptions);
 
       return (
         <div className="flex flex-col mt-4" key={index}>
           <label htmlFor="">{fieldName}</label>
-          <select
+          <Select
+            options={selectOptions}
+            styles={{
+              option: (base) => ({
+                ...base,
+                backgroundColor: "#222222",
+                color: "white",
+              }),
+              control: (base) => ({
+                ...base,
+                backgroundColor: "#222222",
+                height: "48px",
+                border: "2px solid white",
+                marginTop: "8px",
+              }),
+              // placeholder: (base) => {
+              //   return {
+              //     ...base,
+              //     color: "#d1d1d1",
+              //   };
+              // },
+              singleValue: (base) => {
+                return {
+                  ...base,
+                  color: "#ffffff",
+                };
+              },
+              input: (base) => ({
+                ...base,
+                color: "white",
+              }),
+            }}
+          />
+          {/* <select
             {...props.register(`${fileName}${fieldName}`)}
             onChange={changeHandlerTest}
             onBlur={blurHandlerTest}
@@ -59,10 +97,7 @@ const TestForm = (props) => {
                 </option>
               );
             })}
-            {/* <option value="SC007">SC007</option>
-            <option value="SC008">SC008</option>
-            <option value="SC009">SC009</option> */}
-          </select>
+          </select> */}
         </div>
       );
     }
