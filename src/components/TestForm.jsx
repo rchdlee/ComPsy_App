@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 
 const TestForm = (props) => {
-  // const { register } = useFormContext(); // retrieve all hook methods
+  const { register } = useFormContext(); // retrieve all hook methods
 
   const hiddenBool = props.hidden;
   const display = hiddenBool ? "hidden" : "";
@@ -22,9 +22,10 @@ const TestForm = (props) => {
     <div className={`${display}`}>
       {/* <form className="text-white" action="" onSubmit={handleSubmit(onSubmit)}> */}
       <div className="flex flex-col">
-        <label htmlFor="">{fileName} - Subject</label>
+        <label htmlFor="">{fileName} - Subject!~</label>
         <select
-          {...props.register(`${fileName}subject`)}
+          {...register(`${fileName}subject`)}
+          name={`${fileName}subject`}
           onChange={changeHandlerTest}
           onBlur={blurHandlerTest}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
@@ -39,7 +40,7 @@ const TestForm = (props) => {
       <div className="flex flex-col mt-4">
         <label htmlFor="">session</label>
         <input
-          {...props.register(`${fileName}session`)}
+          {...register(`${fileName}session`)}
           onBlur={blurHandlerTest}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
           type="text"
@@ -48,31 +49,33 @@ const TestForm = (props) => {
       <div className="flex flex-col mt-4">
         <label htmlFor="">Task</label>
         <select
-          {...props.register(`${fileName}task`)}
+          {...register(`${fileName}task`)}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
         >
           <option className="h-12" value="CASS">
             CASS
           </option>
           <option value="Task 2">Task 2</option>
+          <option value="Task 2">Task 3</option>
         </select>
       </div>
       <div className="flex flex-col mt-4">
-        <label htmlFor="">Acquisition</label>
+        <label htmlFor="">Acquisition!</label>
         <select
-          {...props.register(`${fileName}acquisition`)}
+          {...register(`${fileName}acquisition`)}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
         >
           <option className="h-12" value="Interested">
             Interested
           </option>
           <option value="Not Interested">Not Interested</option>
+          <option value="Not Interested">meh</option>
         </select>
       </div>
       <div className="flex flex-col mt-4">
         <label htmlFor="">Administration</label>
         <input
-          {...props.register(`${fileName}adminitration`)}
+          {...register(`${fileName}adminitration`)}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
           type="text"
         />
