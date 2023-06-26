@@ -8,16 +8,8 @@ import TestForm from "./TestForm";
 const IngestionMetadata = () => {
   const [selectedFileIndex, setSelectedFileIndex] = useState(0);
 
-  const methods = useForm();
-  // const { touchedFields } = useFormState({ control });
-
-  // console.log(touchedFields);
-
-  const fileNameClickHandler = (e) => {
-    const id = e.target.closest("#files > div").id;
-    // console.log(id);
-    setSelectedFileIndex(id);
-  };
+  // const methods = useForm();
+  const { register, handleSubmit } = useForm();
 
   const ingestedFiles = ["file1.exts", "file2.ext", "verycoolfile3.ext32"];
   // remove extension; '.' in name (in register in form) seems to cause error in data parsing for react-hook-form
@@ -34,39 +26,12 @@ const IngestionMetadata = () => {
   });
 
   // console.log(fileExts);
-  const filesTest = ingestedFiles.map((file, index) => {
-    return (
-      // <TestForm
-      //   testid={file}
-      //   hidden={selectedFileIndex === index}
-      //   index={index}
-      // />
-      <div
-        className="border-2 border-white px-8 rounded h-16  mt-2 flex justify-between items-center hover:bg-cardDark"
-        onClick={fileNameClickHandler}
-        id={index}
-        key={index}
-      >
-        <div className="flex gap-x-4">
-          <File />
-          <p className="">{file}</p>
-        </div>
-        {/* <GreenCheck /> */}
-      </div>
-    );
-  });
 
-  const formsTest = ingestedFilesNoExt.map((file, index) => {
-    return (
-      <TestForm
-        testid={file}
-        hidden={+selectedFileIndex !== index}
-        key={index}
-      />
-    );
-  });
-
-  // const testIDs = ["11", "222"];
+  const fileNameClickHandler = (e) => {
+    const id = e.target.closest("#files > div").id;
+    // console.log(id);
+    setSelectedFileIndex(id);
+  };
 
   const onSubmit = (data) => {
     const dataUnformatted = data;
@@ -89,6 +54,47 @@ const IngestionMetadata = () => {
     console.log(results);
   };
 
+  const filesTest = ingestedFiles.map((file, index) => {
+    const selectedBool = +selectedFileIndex === index;
+    const classes = `${
+      selectedBool ? "border-2 border-white rounded" : ""
+    }  px-8 h-16  mt-2 flex justify-between items-center hover:bg-cardDark`;
+
+    return (
+      // <TestForm
+      //   testid={file}
+      //   hidden={selectedFileIndex === index}
+      //   index={index}
+      // />
+      <div
+        // className="border-2 border-white px-8 rounded h-16  mt-2 flex justify-between items-center hover:bg-cardDark"
+        className={classes}
+        onClick={fileNameClickHandler}
+        id={index}
+        key={index}
+      >
+        <div className="flex gap-x-4">
+          <File />
+          <p className="">{file}</p>
+        </div>
+        {/* <GreenCheck /> */}
+      </div>
+    );
+  });
+
+  const formsTest = ingestedFilesNoExt.map((file, index) => {
+    return (
+      <TestForm
+        register={register}
+        testid={file}
+        hidden={+selectedFileIndex !== index}
+        key={index}
+      />
+    );
+  });
+
+  // const testIDs = ["11", "222"];
+
   return (
     <div className="h-96 mt-16 flex justify-center gap-x-16">
       <div className="w-96 text-white">
@@ -110,20 +116,21 @@ const IngestionMetadata = () => {
 
       {/* FORM */}
       <div className="w-96 ">
-        <FormProvider {...methods}>
-          <form
-            onSubmit={methods.handleSubmit(onSubmit)}
-            className="text-white"
-          >
-            {formsTest}
-            {/* <TestForm testid={"11"} hidden={true} />
+        {/* <FormProvider {...methods}> */}
+        <form
+          // onSubmit={methods.handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
+          className="text-white"
+        >
+          {formsTest}
+          {/* <TestForm testid={"11"} hidden={true} />
             <TestForm testid={"222"} hidden={false} /> */}
-            <input
-              className="px-8 py-4 border-2 border-white mt-4 hover:bg-lilacBlue hover:text-blackTextLight"
-              type="submit"
-            />
-          </form>
-        </FormProvider>
+          <input
+            className="px-8 py-4 border-2 border-white mt-4 hover:bg-lilacBlue hover:text-blackTextLight"
+            type="submit"
+          />
+        </form>
+        {/* </FormProvider> */}
         {/* <form
           className="text-white"
           action=""

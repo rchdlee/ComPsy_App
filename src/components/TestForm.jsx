@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 
 const TestForm = (props) => {
-  const { register } = useFormContext(); // retrieve all hook methods
+  // const { register } = useFormContext(); // retrieve all hook methods
 
   const hiddenBool = props.hidden;
   const display = hiddenBool ? "hidden" : "";
@@ -24,7 +24,7 @@ const TestForm = (props) => {
       <div className="flex flex-col">
         <label htmlFor="">{fileName} - Subject</label>
         <select
-          {...register(`${fileName}subject`)}
+          {...props.register(`${fileName}subject`)}
           onChange={changeHandlerTest}
           onBlur={blurHandlerTest}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
@@ -39,7 +39,7 @@ const TestForm = (props) => {
       <div className="flex flex-col mt-4">
         <label htmlFor="">session</label>
         <input
-          {...register(`${fileName}session`)}
+          {...props.register(`${fileName}session`)}
           onBlur={blurHandlerTest}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
           type="text"
@@ -48,7 +48,7 @@ const TestForm = (props) => {
       <div className="flex flex-col mt-4">
         <label htmlFor="">Task</label>
         <select
-          {...register(`${fileName}task`)}
+          {...props.register(`${fileName}task`)}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
         >
           <option className="h-12" value="CASS">
@@ -60,7 +60,7 @@ const TestForm = (props) => {
       <div className="flex flex-col mt-4">
         <label htmlFor="">Acquisition</label>
         <select
-          {...register(`${fileName}acquisition`)}
+          {...props.register(`${fileName}acquisition`)}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
         >
           <option className="h-12" value="Interested">
@@ -72,7 +72,7 @@ const TestForm = (props) => {
       <div className="flex flex-col mt-4">
         <label htmlFor="">Administration</label>
         <input
-          {...register(`${fileName}adminitration`)}
+          {...props.register(`${fileName}adminitration`)}
           className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
           type="text"
         />

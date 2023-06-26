@@ -3,7 +3,8 @@ import SyringeSmall from "../icons/SyringeSmall";
 
 const LeftNav = () => {
   return (
-    <div className="bg-white dark:bg-sidebarDark xl:w-60 xl:h-screen text-white">
+    // <div className="bg-white dark:bg-sidebarDark xl:w-60 xl:h-screen text-white">
+    <div className="bg-white dark:bg-sidebarDark w-60 h-screen text-white">
       <div className=" px-6">
         <h1 className="text-5xl font-bold pt-6 text-center">ComPsy</h1>
         <div className="mt-5 ">
