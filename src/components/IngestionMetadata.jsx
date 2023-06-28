@@ -8,24 +8,165 @@ import TestForm from "./TestForm";
 const IngestionMetadata = () => {
   const [selectedFileIndex, setSelectedFileIndex] = useState(0);
 
-  // const methods = useForm();
-  const { register, handleSubmit } = useForm();
+  const DUMMY_MISSING_METADATA = [
+    {
+      fileName: "file1.ext",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["1", "3", "5", "7"],
+          value: "3",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["1", "2", "3"],
+          value: "",
+        },
+        {
+          name: "Session",
+          type: "input",
+          options: null,
+          value: "test 1 session",
+        },
+        {
+          name: "Acquisition",
+          type: "select",
+          options: ["Interested", "Not Interested"],
+          value: "",
+        },
+        { name: "Administration", type: "input", options: null, value: "" },
+        { name: "Device", type: "input", options: null, value: "" },
+      ],
+    },
+    {
+      fileName: "file2.extt",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["2", "4", "6", "8"],
+          value: "4",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["4", "5", "6"],
+          value: "5",
+        },
+        { name: "Session", type: "input", options: null, value: "qqq" },
+        {
+          name: "Acquisition",
+          type: "select",
+          options: ["Interested!", "Not Interested!"],
+          value: "Not Interested!",
+        },
+        {
+          name: "Administration",
+          type: "input",
+          options: null,
+          value: "test 2",
+        },
+        { name: "Device", type: "input", options: null, value: "qqq" },
+      ],
+    },
+    {
+      fileName: "file3.exttt",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["2.5", "4.5", "6.5", "8.5"],
+          value: "",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["7", "8", "9"],
+          value: "",
+        },
+        { name: "Session", type: "input", options: null, value: "" },
+        // {
+        //   name: "Acquisition",
+        //   type: "select",
+        //   options: ["Interested!!", "Not Interested!!"],
+        //   value: "",
+        // },
+        {
+          name: "Administration",
+          type: "input",
+          options: null,
+          value: "test default value!",
+        },
+        { name: "Device", type: "input", options: null, value: "" },
+      ],
+    },
+  ];
 
-  const ingestedFiles = ["file1.exts", "file2.ext", "verycoolfile3.ext32"];
+  const defaultValues = {};
+
+  DUMMY_MISSING_METADATA.forEach((file) => {
+    const fields = file.fields;
+    const fileName = file.fileName;
+    const dotIndex = fileName.indexOf(".");
+    const fileNameNoExt = fileName.slice(0, dotIndex);
+    fields.forEach((field) => {
+      // let defaultValue;
+      // if (field.value === "" && field.type === "select") {
+      // defaultValues[`${fileNameNoExt}${field.name}`] = "";
+      // } else {
+      defaultValues[`${fileNameNoExt}${field.name}`] = field.value;
+      // }
+    });
+  });
+
+  // const methods = useForm({
+  //   defaultValues: defaultValues,
+  // });
+  const { register, handleSubmit, watch } = useForm({
+    defaultValues: defaultValues,
+  });
+
+  // const ingestedFiles = ["file1.exts", "file2.ext", "verycoolfile3.ext32"];
+
+  // console.log(defaultValues, "🍵");
+
+  const ingestedFileNames = DUMMY_MISSING_METADATA.map((file) => {
+    return file.fileName;
+  });
   // remove extension; '.' in name (in register in form) seems to cause error in data parsing for react-hook-form
-  const ingestedFilesNoExt = ingestedFiles.map((file) => {
+  const ingestedFilesNoExt = ingestedFileNames.map((file) => {
     const dotIndex = file.indexOf(".");
     const fileNameNoExt = file.slice(0, dotIndex);
     return fileNameNoExt;
   });
   // for adding back extension in data object
-  const fileExts = ingestedFiles.map((file) => {
+  const fileExts = ingestedFileNames.map((file) => {
     const dotIndex = file.indexOf(".");
     const fileNameNoExt = file.slice(dotIndex);
     return fileNameNoExt;
   });
 
-  // console.log(fileExts);
+  // const watchAllFields = methods.watch();
+  const watchAllFields = watch();
+  const watchAllFieldsByFile = ingestedFilesNoExt.map((id, index) => {
+    const formData = Object.fromEntries(
+      Object.entries(watchAllFields)
+        .filter(([key]) => key.includes(id))
+        // .map(([key, value]) => {
+        //   // return [key.slice(idLength), value];
+        //   return [key, value];
+        // })
+    );
+    return formData;
+  });
+  const hasFilledEverything =
+    Object.values(watchAllFields).filter((value) => value === "").length === 0;
+  // console.log(watchAllFieldsByFile, hasFilledEverything);
 
   const fileNameClickHandler = (e) => {
     const id = e.target.closest("#files > div").id;
@@ -34,6 +175,7 @@ const IngestionMetadata = () => {
   };
 
   const onSubmit = (data) => {
+    // console.log(data, "this is unformatted data");
     const dataUnformatted = data;
     const results = ingestedFilesNoExt.map((id, index) => {
       const idLength = id.length;
@@ -46,19 +188,52 @@ const IngestionMetadata = () => {
             return [key.slice(idLength), value];
           })
       );
-      console.log(dataUnformatted, formDataFormatted);
+      // console.log(dataUnformatted, formDataFormatted);
 
       const fullDataObj = { ...idInfo, ...formDataFormatted };
       return fullDataObj;
     });
-    console.log(results);
+
+    // do something with results
+    console.log('successfully submitted!! 🎉', results);
   };
 
-  const filesTest = ingestedFiles.map((file, index) => {
+  const filesTest = ingestedFileNames.map((file, index) => {
     const selectedBool = +selectedFileIndex === index;
     const classes = `${
       selectedBool ? "border-2 border-white rounded" : ""
     }  px-8 h-16  mt-2 flex justify-between items-center hover:bg-cardDark`;
+
+    // const results = ingestedFilesNoExt.map((id, index) => {
+    //   const idLength = id.length;
+    //   // console.log(idLength);
+    //   const idInfo = { id: id + fileExts[index] };
+    //   const formDataFormatted = Object.fromEntries(
+    //     Object.entries(watchAllFields)
+    //       .filter(([key]) => key.includes(id))
+    //       .map(([key, value]) => {
+    //         // return [key.slice(idLength), value];
+    //         return [key, value];
+    //       })
+    //   );
+    //   // console.log(dataUnformatted, formDataFormatted);
+    //   // const fullDataObj = { ...idInfo, ...formDataFormatted };
+    //   // return fullDataObj;
+    //   return formDataFormatted;
+    // });
+
+    const fileResults = watchAllFieldsByFile[index];
+    const emptyIndices = Object.values(fileResults)
+      .map((value, index) => {
+        if (value === "") {
+          return index;
+        }
+      })
+      .filter((value) => value !== undefined);
+
+    const hasCompletedAllItems = emptyIndices.length === 0 ? true : false;
+
+    // console.log(emptyIndices, hasCompletedAllItems, "🥞");
 
     return (
       // <TestForm
@@ -77,16 +252,26 @@ const IngestionMetadata = () => {
           <File />
           <p className="">{file}</p>
         </div>
+        {hasCompletedAllItems ? <GreenCheck /> : ""}
         {/* <GreenCheck /> */}
       </div>
     );
   });
 
-  const formsTest = ingestedFilesNoExt.map((file, index) => {
+  // const formsTest = ingestedFilesNoExt.map((file, index) => {
+  const formsTest = DUMMY_MISSING_METADATA.map((file, index) => {
+    const fileName = file.fileName;
+    const dotIndex = fileName.indexOf(".");
+    const fileNameNoExt = fileName.slice(0, dotIndex);
+
+    const inputData = file.fields;
+
     return (
       <TestForm
+        watchedFields={watchAllFieldsByFile[index]}
         register={register}
-        testid={file}
+        fileName={fileNameNoExt}
+        inputData={inputData}
         hidden={+selectedFileIndex !== index}
         key={index}
       />
@@ -110,11 +295,19 @@ const IngestionMetadata = () => {
             </div>
             <GreenCheck />
           </div> */}
+          <button
+            className="px-8 py-4 border-2 border-black mt-4 ml-24 bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
+            disabled={!hasFilledEverything}
+            onClick={handleSubmit(onSubmit)}
+          >
+            submit (test)
+          </button>
         </div>
       </div>
       <div className="w-px bg-white opacity-50"></div>
 
       {/* FORM */}
+      {/* <div className="w-96 overflow-scroll pr-4"> */}
       <div className="w-96 ">
         {/* <FormProvider {...methods}> */}
         <form
@@ -125,10 +318,11 @@ const IngestionMetadata = () => {
           {formsTest}
           {/* <TestForm testid={"11"} hidden={true} />
             <TestForm testid={"222"} hidden={false} /> */}
-          <input
-            className="px-8 py-4 border-2 border-white mt-4 hover:bg-lilacBlue hover:text-blackTextLight"
+          {/* <input
+            className="px-8 py-4 border-2 border-black mt-4 bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
+            disabled={!hasFilledEverything}
             type="submit"
-          />
+          /> */}
         </form>
         {/* </FormProvider> */}
         {/* <form
