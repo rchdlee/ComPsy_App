@@ -25,7 +25,12 @@ const IngestionMetadata = () => {
           options: ["1", "2", "3"],
           value: "",
         },
-        { name: "Session", type: "input", options: null, value: "" },
+        {
+          name: "Session",
+          type: "input",
+          options: null,
+          value: "test 1 session",
+        },
         {
           name: "Acquisition",
           type: "select",
@@ -59,7 +64,12 @@ const IngestionMetadata = () => {
           options: ["Interested!", "Not Interested!"],
           value: "Not Interested!",
         },
-        { name: "Administration", type: "input", options: null, value: "" },
+        {
+          name: "Administration",
+          type: "input",
+          options: null,
+          value: "test 2",
+        },
         { name: "Device", type: "input", options: null, value: "" },
       ],
     },
@@ -105,26 +115,28 @@ const IngestionMetadata = () => {
     const dotIndex = fileName.indexOf(".");
     const fileNameNoExt = fileName.slice(0, dotIndex);
     fields.forEach((field) => {
-      let defaultValue;
-      if (field.value === "" && field.type === "select") {
-        defaultValues[`${fileNameNoExt}${field.name}`] = "-- select --";
-      } else {
-        defaultValues[`${fileNameNoExt}${field.name}`] = field.value;
-      }
+      // let defaultValue;
+      // if (field.value === "" && field.type === "select") {
+      // defaultValues[`${fileNameNoExt}${field.name}`] = "";
+      // } else {
+      defaultValues[`${fileNameNoExt}${field.name}`] = field.value;
+      // }
     });
   });
 
-  // const methods = useForm();
-  const { register, handleSubmit, watch } = useForm({
+  const methods = useForm({
     defaultValues: defaultValues,
   });
+  // const { register, handleSubmit, watch } = useForm({
+  //   defaultValues: defaultValues,
+  // });
 
-  const watchAllFields = watch();
+  const watchAllFields = methods.watch();
   console.log(watchAllFields, "🍰");
 
   // const ingestedFiles = ["file1.exts", "file2.ext", "verycoolfile3.ext32"];
 
-  console.log(defaultValues, "🍵");
+  // console.log(defaultValues, "🍵");
 
   const ingestedFileNames = DUMMY_MISSING_METADATA.map((file) => {
     return file.fileName;
@@ -151,6 +163,7 @@ const IngestionMetadata = () => {
   };
 
   const onSubmit = (data) => {
+    console.log(data, "this is unformatted data");
     const dataUnformatted = data;
     const results = ingestedFilesNoExt.map((id, index) => {
       const idLength = id.length;
@@ -209,7 +222,7 @@ const IngestionMetadata = () => {
 
     return (
       <TestForm
-        register={register}
+        // register={register}
         testid={fileNameNoExt}
         inputData={inputData}
         hidden={+selectedFileIndex !== index}
@@ -241,21 +254,21 @@ const IngestionMetadata = () => {
 
       {/* FORM */}
       <div className="w-96 ">
-        {/* <FormProvider {...methods}> */}
-        <form
-          // onSubmit={methods.handleSubmit(onSubmit)}
-          onSubmit={handleSubmit(onSubmit)}
-          className="text-white"
-        >
-          {formsTest}
-          {/* <TestForm testid={"11"} hidden={true} />
+        <FormProvider {...methods}>
+          <form
+            onSubmit={methods.handleSubmit(onSubmit)}
+            // onSubmit={handleSubmit(onSubmit)}
+            className="text-white"
+          >
+            {formsTest}
+            {/* <TestForm testid={"11"} hidden={true} />
             <TestForm testid={"222"} hidden={false} /> */}
-          <input
-            className="px-8 py-4 border-2 border-white mt-4 hover:bg-lilacBlue hover:text-blackTextLight"
-            type="submit"
-          />
-        </form>
-        {/* </FormProvider> */}
+            <input
+              className="px-8 py-4 border-2 border-white mt-4 hover:bg-lilacBlue hover:text-blackTextLight"
+              type="submit"
+            />
+          </form>
+        </FormProvider>
         {/* <form
           className="text-white"
           action=""

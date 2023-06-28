@@ -1,19 +1,11 @@
-// import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import Select from "react-select";
 
 const TestForm = (props) => {
-  // const { register } = useFormContext(); // retrieve all hook methods
+  const { register, control } = useFormContext(); // retrieve all hook methods
 
   const hiddenBool = props.hidden;
   const display = hiddenBool ? "hidden" : "";
-
-  const changeHandlerTest = (e) => {
-    // console.log(e);
-  };
-
-  const blurHandlerTest = () => {
-    console.log("blurred");
-  };
 
   const fileName = props.testid;
 
@@ -28,11 +20,11 @@ const TestForm = (props) => {
     if (field.type === "input") {
       // console.log(`${fileName}${fieldName}`, "🍙");
       return (
-        <div className="flex flex-col mt-4" key={index}>
+        <div className="flex flex-col first:mt-0 mt-4" key={index}>
           <label htmlFor="">{fieldName}</label>
           <input
-            {...props.register(`${fileName}${fieldName}`)}
-            onBlur={blurHandlerTest}
+            // {...props.register(`${fileName}${fieldName}`)}
+            {...register(`${fileName}${fieldName}`)}
             className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
             type="text"
           />
@@ -47,49 +39,21 @@ const TestForm = (props) => {
         return { value: option, label: option };
       });
       // console.log(selectOptions);
+      const reg = register(`${fileName}${fieldName}`);
 
       return (
-        <div className="flex flex-col mt-4" key={index}>
+        <div className="flex flex-col mt-4 first:mt-0" key={index}>
           <label htmlFor="">{fieldName}</label>
-          <Select
-            options={selectOptions}
-            styles={{
-              option: (base) => ({
-                ...base,
-                backgroundColor: "#222222",
-                color: "white",
-              }),
-              control: (base) => ({
-                ...base,
-                backgroundColor: "#222222",
-                height: "48px",
-                border: "2px solid white",
-                marginTop: "8px",
-              }),
-              // placeholder: (base) => {
-              //   return {
-              //     ...base,
-              //     color: "#d1d1d1",
-              //   };
-              // },
-              singleValue: (base) => {
-                return {
-                  ...base,
-                  color: "#ffffff",
-                };
-              },
-              input: (base) => ({
-                ...base,
-                color: "white",
-              }),
-            }}
-          />
-          {/* <select
-            {...props.register(`${fileName}${fieldName}`)}
-            onChange={changeHandlerTest}
-            onBlur={blurHandlerTest}
+          <select
+            // {...register(`${fileName}${fieldName}`).ref}
+            ref={reg.ref}
+            name={reg.name}
+            onChange={(e) => reg.onChange(e)}
             className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
           >
+            <option value="" disabled className="">
+              -- select --
+            </option>
             {fieldOptions.map((option) => {
               return (
                 <option value={option} key={`${fieldName}${option}`}>
@@ -97,7 +61,49 @@ const TestForm = (props) => {
                 </option>
               );
             })}
-          </select> */}
+          </select>
+          {/* <Controller
+            control={control}
+            name={`${fileName}${fieldName}`}
+            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+              <Select
+                options={selectOptions}
+                ref={ref}
+                onChange={onChange}
+                value={value}
+                styles={{
+                  option: (base) => ({
+                    ...base,
+                    backgroundColor: "#222222",
+                    color: "white",
+                  }),
+                  control: (base) => ({
+                    ...base,
+                    backgroundColor: "#222222",
+                    height: "48px",
+                    border: "2px solid white",
+                    marginTop: "8px",
+                  }),
+                  // placeholder: (base) => {
+                  //   return {
+                  //     ...base,
+                  //     color: "#d1d1d1",
+                  //   };
+                  // },
+                  singleValue: (base) => {
+                    return {
+                      ...base,
+                      color: "#ffffff",
+                    };
+                  },
+                  input: (base) => ({
+                    ...base,
+                    color: "white",
+                  }),
+                }}
+              />
+            )}
+          /> */}
         </div>
       );
     }
