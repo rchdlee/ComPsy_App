@@ -2,30 +2,45 @@ import { useFormContext, Controller } from "react-hook-form";
 import Select from "react-select";
 
 const TestForm = (props) => {
-  const { register, control } = useFormContext(); // retrieve all hook methods
+  // const { register, control } = useFormContext(); // retrieve all hook methods
 
   const hiddenBool = props.hidden;
   const display = hiddenBool ? "hidden" : "";
 
-  const fileName = props.testid;
+  const fileName = props.fileName;
+  const watchedFields = Object.entries(props.watchedFields).map(
+    ([key, value]) => {
+      return [key.slice(fileName.length), value];
+      // return [key, value];
+    }
+  );
+
+  // console.log(watchedFields);
 
   const formItems = props.inputData.map((field, index) => {
     const fieldName = field.name;
     const fieldOptions = field.options;
+
+    // const needsFilling = field.value === "";
+    // console.log(fieldName);
+    const needsFilling = watchedFields[index][1] === "";
+
+    const needsFillingStyles = `${
+      needsFilling ? "border-salmonRedActive" : "border-white"
+    }`;
 
     // if (fieldOptions) {
     //   fieldOptions.unshift("-- select --");
     // }
 
     if (field.type === "input") {
-      // console.log(`${fileName}${fieldName}`, "🍙");
       return (
         <div className="flex flex-col first:mt-0 mt-4" key={index}>
           <label htmlFor="">{fieldName}</label>
           <input
             // {...props.register(`${fileName}${fieldName}`)}
-            {...register(`${fileName}${fieldName}`)}
-            className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
+            {...props.register(`${fileName}${fieldName}`)}
+            className={`bg-backgroundDark h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
             type="text"
           />
         </div>
@@ -34,12 +49,12 @@ const TestForm = (props) => {
     if (field.type === "select") {
       // const fieldOptionsWithSelect = field.options;
       // fieldOptionsWithSelect.unshift("-- select  --");
-      // console.log(`${fileName}${fieldName}`, "🍘");
-      const selectOptions = field.options.map((option) => {
-        return { value: option, label: option };
-      });
+
+      // const selectOptions = field.options.map((option) => {
+      //   return { value: option, label: option };
+      // });
       // console.log(selectOptions);
-      const reg = register(`${fileName}${fieldName}`);
+      const reg = props.register(`${fileName}${fieldName}`);
 
       return (
         <div className="flex flex-col mt-4 first:mt-0" key={index}>
@@ -49,10 +64,10 @@ const TestForm = (props) => {
             ref={reg.ref}
             name={reg.name}
             onChange={(e) => reg.onChange(e)}
-            className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
+            className={`bg-backgroundDark h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
           >
             <option value="" disabled className="">
-              -- select --
+              -
             </option>
             {fieldOptions.map((option) => {
               return (

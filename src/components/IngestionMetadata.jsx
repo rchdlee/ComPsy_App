@@ -49,15 +49,15 @@ const IngestionMetadata = () => {
           name: "Subject",
           type: "select",
           options: ["2", "4", "6", "8"],
-          value: "",
+          value: "4",
         },
         {
           name: "TaskID",
           type: "select",
           options: ["4", "5", "6"],
-          value: "",
+          value: "5",
         },
-        { name: "Session", type: "input", options: null, value: "" },
+        { name: "Session", type: "input", options: null, value: "qqq" },
         {
           name: "Acquisition",
           type: "select",
@@ -70,7 +70,7 @@ const IngestionMetadata = () => {
           options: null,
           value: "test 2",
         },
-        { name: "Device", type: "input", options: null, value: "" },
+        { name: "Device", type: "input", options: null, value: "qqq" },
       ],
     },
     {
@@ -90,12 +90,12 @@ const IngestionMetadata = () => {
           value: "",
         },
         { name: "Session", type: "input", options: null, value: "" },
-        {
-          name: "Acquisition",
-          type: "select",
-          options: ["Interested!!", "Not Interested!!"],
-          value: "",
-        },
+        // {
+        //   name: "Acquisition",
+        //   type: "select",
+        //   options: ["Interested!!", "Not Interested!!"],
+        //   value: "",
+        // },
         {
           name: "Administration",
           type: "input",
@@ -124,15 +124,12 @@ const IngestionMetadata = () => {
     });
   });
 
-  const methods = useForm({
-    defaultValues: defaultValues,
-  });
-  // const { register, handleSubmit, watch } = useForm({
+  // const methods = useForm({
   //   defaultValues: defaultValues,
   // });
-
-  const watchAllFields = methods.watch();
-  console.log(watchAllFields, "🍰");
+  const { register, handleSubmit, watch } = useForm({
+    defaultValues: defaultValues,
+  });
 
   // const ingestedFiles = ["file1.exts", "file2.ext", "verycoolfile3.ext32"];
 
@@ -154,7 +151,22 @@ const IngestionMetadata = () => {
     return fileNameNoExt;
   });
 
-  // console.log(fileExts);
+  // const watchAllFields = methods.watch();
+  const watchAllFields = watch();
+  const watchAllFieldsByFile = ingestedFilesNoExt.map((id, index) => {
+    const formData = Object.fromEntries(
+      Object.entries(watchAllFields)
+        .filter(([key]) => key.includes(id))
+        // .map(([key, value]) => {
+        //   // return [key.slice(idLength), value];
+        //   return [key, value];
+        // })
+    );
+    return formData;
+  });
+  const hasFilledEverything =
+    Object.values(watchAllFields).filter((value) => value === "").length === 0;
+  // console.log(watchAllFieldsByFile, hasFilledEverything);
 
   const fileNameClickHandler = (e) => {
     const id = e.target.closest("#files > div").id;
@@ -163,7 +175,7 @@ const IngestionMetadata = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(data, "this is unformatted data");
+    // console.log(data, "this is unformatted data");
     const dataUnformatted = data;
     const results = ingestedFilesNoExt.map((id, index) => {
       const idLength = id.length;
@@ -181,7 +193,9 @@ const IngestionMetadata = () => {
       const fullDataObj = { ...idInfo, ...formDataFormatted };
       return fullDataObj;
     });
-    console.log(results);
+
+    // do something with results
+    console.log('successfully submitted!! 🎉', results);
   };
 
   const filesTest = ingestedFileNames.map((file, index) => {
@@ -189,6 +203,37 @@ const IngestionMetadata = () => {
     const classes = `${
       selectedBool ? "border-2 border-white rounded" : ""
     }  px-8 h-16  mt-2 flex justify-between items-center hover:bg-cardDark`;
+
+    // const results = ingestedFilesNoExt.map((id, index) => {
+    //   const idLength = id.length;
+    //   // console.log(idLength);
+    //   const idInfo = { id: id + fileExts[index] };
+    //   const formDataFormatted = Object.fromEntries(
+    //     Object.entries(watchAllFields)
+    //       .filter(([key]) => key.includes(id))
+    //       .map(([key, value]) => {
+    //         // return [key.slice(idLength), value];
+    //         return [key, value];
+    //       })
+    //   );
+    //   // console.log(dataUnformatted, formDataFormatted);
+    //   // const fullDataObj = { ...idInfo, ...formDataFormatted };
+    //   // return fullDataObj;
+    //   return formDataFormatted;
+    // });
+
+    const fileResults = watchAllFieldsByFile[index];
+    const emptyIndices = Object.values(fileResults)
+      .map((value, index) => {
+        if (value === "") {
+          return index;
+        }
+      })
+      .filter((value) => value !== undefined);
+
+    const hasCompletedAllItems = emptyIndices.length === 0 ? true : false;
+
+    // console.log(emptyIndices, hasCompletedAllItems, "🥞");
 
     return (
       // <TestForm
@@ -207,6 +252,7 @@ const IngestionMetadata = () => {
           <File />
           <p className="">{file}</p>
         </div>
+        {hasCompletedAllItems ? <GreenCheck /> : ""}
         {/* <GreenCheck /> */}
       </div>
     );
@@ -222,8 +268,9 @@ const IngestionMetadata = () => {
 
     return (
       <TestForm
-        // register={register}
-        testid={fileNameNoExt}
+        watchedFields={watchAllFieldsByFile[index]}
+        register={register}
+        fileName={fileNameNoExt}
         inputData={inputData}
         hidden={+selectedFileIndex !== index}
         key={index}
@@ -248,27 +295,36 @@ const IngestionMetadata = () => {
             </div>
             <GreenCheck />
           </div> */}
+          <button
+            className="px-8 py-4 border-2 border-black mt-4 ml-24 bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
+            disabled={!hasFilledEverything}
+            onClick={handleSubmit(onSubmit)}
+          >
+            submit (test)
+          </button>
         </div>
       </div>
       <div className="w-px bg-white opacity-50"></div>
 
       {/* FORM */}
+      {/* <div className="w-96 overflow-scroll pr-4"> */}
       <div className="w-96 ">
-        <FormProvider {...methods}>
-          <form
-            onSubmit={methods.handleSubmit(onSubmit)}
-            // onSubmit={handleSubmit(onSubmit)}
-            className="text-white"
-          >
-            {formsTest}
-            {/* <TestForm testid={"11"} hidden={true} />
+        {/* <FormProvider {...methods}> */}
+        <form
+          // onSubmit={methods.handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
+          className="text-white"
+        >
+          {formsTest}
+          {/* <TestForm testid={"11"} hidden={true} />
             <TestForm testid={"222"} hidden={false} /> */}
-            <input
-              className="px-8 py-4 border-2 border-white mt-4 hover:bg-lilacBlue hover:text-blackTextLight"
-              type="submit"
-            />
-          </form>
-        </FormProvider>
+          {/* <input
+            className="px-8 py-4 border-2 border-black mt-4 bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
+            disabled={!hasFilledEverything}
+            type="submit"
+          /> */}
+        </form>
+        {/* </FormProvider> */}
         {/* <form
           className="text-white"
           action=""
