@@ -107,8 +107,8 @@ const IngestionMetadata = () => {
     },
   ];
 
+  // Default values for useForm
   const defaultValues = {};
-
   DUMMY_MISSING_METADATA.forEach((file) => {
     const fields = file.fields;
     const fileName = file.fileName;
@@ -155,12 +155,11 @@ const IngestionMetadata = () => {
   const watchAllFields = watch();
   const watchAllFieldsByFile = ingestedFilesNoExt.map((id, index) => {
     const formData = Object.fromEntries(
-      Object.entries(watchAllFields)
-        .filter(([key]) => key.includes(id))
-        // .map(([key, value]) => {
-        //   // return [key.slice(idLength), value];
-        //   return [key, value];
-        // })
+      Object.entries(watchAllFields).filter(([key]) => key.includes(id))
+      // .map(([key, value]) => {
+      //   // return [key.slice(idLength), value];
+      //   return [key, value];
+      // })
     );
     return formData;
   });
@@ -195,7 +194,7 @@ const IngestionMetadata = () => {
     });
 
     // do something with results
-    console.log('successfully submitted!! 🎉', results);
+    console.log("successfully submitted!! 🎉", results);
   };
 
   const filesTest = ingestedFileNames.map((file, index) => {

@@ -40,7 +40,9 @@ const TestForm = (props) => {
           <input
             // {...props.register(`${fileName}${fieldName}`)}
             {...props.register(`${fileName}${fieldName}`)}
+            // className={`bg-backgroundDark dark:autofill:shadow-[inset_0_0_0px_1000px_#222222] dark:autofill:text-fill-white dark:autofill:caret-white h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
             className={`bg-backgroundDark h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
+            autoComplete="off"
             type="text"
           />
         </div>

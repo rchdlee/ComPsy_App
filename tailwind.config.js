@@ -20,5 +20,5 @@ export default {
     },
     extend: {},
   },
-  plugins: [],
+  plugins: [require("autoprefixer"), require("tailwindcss-text-fill")],
 };
