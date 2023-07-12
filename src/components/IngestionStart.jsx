@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 
-const IngestionStart = () => {
+const IngestionStart = (props) => {
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
@@ -41,9 +41,116 @@ const IngestionStart = () => {
     "Study 6",
   ];
 
+  const DUMMY_MISSING_METADATA = [
+    {
+      fileName: "file1.ext",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["1", "3", "5", "7"],
+          value: "3",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["1", "2", "3"],
+          value: "",
+        },
+        {
+          name: "Session",
+          type: "input",
+          options: null,
+          value: "test 1 session",
+        },
+        {
+          name: "Acquisition",
+          type: "select",
+          options: ["Interested", "Not Interested"],
+          value: "",
+        },
+        { name: "Administration", type: "input", options: null, value: "" },
+        { name: "Device", type: "input", options: null, value: "" },
+      ],
+    },
+    {
+      fileName: "file2.extt",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["2", "4", "6", "8"],
+          value: "4",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["4", "5", "6"],
+          value: "5",
+        },
+        { name: "Session", type: "input", options: null, value: "qqq" },
+        {
+          name: "Acquisition",
+          type: "select",
+          options: ["Interested!", "Not Interested!"],
+          value: "Not Interested!",
+        },
+        {
+          name: "Administration",
+          type: "input",
+          options: null,
+          value: "test 2",
+        },
+        { name: "Device", type: "input", options: null, value: "qqq" },
+      ],
+    },
+    {
+      fileName: "file3.exttt",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["2.5", "4.5", "6.5", "8.5"],
+          value: "",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["7", "8", "9"],
+          value: "",
+        },
+        { name: "Session", type: "input", options: null, value: "" },
+        // {
+        //   name: "Acquisition",
+        //   type: "select",
+        //   options: ["Interested!!", "Not Interested!!"],
+        //   value: "",
+        // },
+        {
+          name: "Administration",
+          type: "input",
+          options: null,
+          value: "test default value!",
+        },
+        { name: "Device", type: "input", options: null, value: "" },
+      ],
+    },
+  ];
+
   const studyClickHandler = (e) => {
     // console.log(e.target.innerHTML);
     setSelectedStudy(e.target.innerHTML);
+  };
+
+  const continueHandler = () => {
+    props.setIsAtStart(false);
+    setTimeout(() => {
+      props.setMetadata(DUMMY_MISSING_METADATA);
+      console.log("hi 😅");
+    }, 2000);
   };
 
   const handleFileInput = () => {};
@@ -101,7 +208,10 @@ const IngestionStart = () => {
           <div className="w-3 h-3 border-2 border-white bg-white rounded-full"></div>
           <div className="w-3 h-3 border-2 border-white rounded-full"></div>
         </div>
-        <div className="text-white absolute right-60">
+        <div
+          className="text-white absolute right-60 hover:underline"
+          onClick={continueHandler}
+        >
           <p>Continue</p>
         </div>
       </div>

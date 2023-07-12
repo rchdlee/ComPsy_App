@@ -15,7 +15,7 @@ const TestForm = (props) => {
     }
   );
 
-  // console.log(watchedFields);
+  // console.log(watchedFields, "🎃");
 
   const formItems = props.inputData.map((field, index) => {
     const fieldName = field.name;
@@ -23,7 +23,9 @@ const TestForm = (props) => {
 
     // const needsFilling = field.value === "";
     // console.log(fieldName);
+
     const needsFilling = watchedFields[index][1] === "";
+    // const needsFilling = false;
 
     const needsFillingStyles = `${
       needsFilling ? "border-salmonRedActive" : "border-white"
@@ -36,7 +38,7 @@ const TestForm = (props) => {
     if (field.type === "input") {
       return (
         <div className="flex flex-col first:mt-0 mt-4" key={index}>
-          <label htmlFor="">{fieldName}</label>
+          <label htmlFor={`${fileName}${fieldName}`}>{fieldName}</label>
           <input
             // {...props.register(`${fileName}${fieldName}`)}
             {...props.register(`${fileName}${fieldName}`)}
@@ -44,6 +46,7 @@ const TestForm = (props) => {
             className={`bg-backgroundDark h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
             autoComplete="off"
             type="text"
+            id={`${fileName}${fieldName}`}
           />
         </div>
       );
@@ -60,13 +63,14 @@ const TestForm = (props) => {
 
       return (
         <div className="flex flex-col mt-4 first:mt-0" key={index}>
-          <label htmlFor="">{fieldName}</label>
+          <label htmlFor={`${fileName}${fieldName}`}>{fieldName}</label>
           <select
             // {...register(`${fileName}${fieldName}`).ref}
             ref={reg.ref}
             name={reg.name}
             onChange={(e) => reg.onChange(e)}
             className={`bg-backgroundDark h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
+            id={`${fileName}${fieldName}`}
           >
             <option value="" disabled className="">
               -

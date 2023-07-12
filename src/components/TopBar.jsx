@@ -1,6 +1,12 @@
+import { useLocation } from "react-router-dom";
 import Switch from "react-switch";
 
 const TopBar = (props) => {
+  const location = useLocation();
+  // console.log(location, "😫");
+  const path = location.pathname;
+  const pathFormatted = path.slice(1);
+
   const handleDarkModeSwitch = () => {
     props.setIsDarkMode((prevState) => !prevState);
   };
@@ -9,7 +15,7 @@ const TopBar = (props) => {
     <div className="text-white flex justify-between mt-2">
       <div className="text-sm">
         <img src="" alt="" />
-        <p>Home/Path/Path</p>
+        <p>{`Home / ${pathFormatted}`}</p>
       </div>
       <div className="flex gap-x-8 items-center">
         <div className="flex items-center gap-x-3 rounded-full px-4 py-2 bg-cardDark">
@@ -29,16 +35,16 @@ const TopBar = (props) => {
           <p>Birkan Tunc</p>
         </div>
         <div>
-          <label>
-            {/* <span>Switch with default style</span> */}
-            <Switch
-              onChange={handleDarkModeSwitch}
-              checked={props.isDarkMode}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              // onColor="#4A4A4A"
-            />
-          </label>
+          {/* <label> */}
+          {/* <span>Switch with default style</span> */}
+          <Switch
+            onChange={handleDarkModeSwitch}
+            checked={props.isDarkMode}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            // onColor="#4A4A4A"
+          />
+          {/* </label> */}
         </div>
       </div>
     </div>

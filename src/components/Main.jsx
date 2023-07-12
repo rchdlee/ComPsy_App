@@ -1,8 +1,8 @@
 import Dashboard from "./Dashboard";
-import IngestionMetadata from "./IngestionMetadata";
-import IngestionMetadataTest from "./IngestionMetadataTest";
-import IngestionStart from "./IngestionStart";
+import Ingestion from "./Ingestion";
 import TopBar from "./TopBar";
+
+import { Route, Routes, Navigate } from "react-router-dom";
 
 const Main = (props) => {
   return (
@@ -11,10 +11,12 @@ const Main = (props) => {
         isDarkMode={props.isDarkMode}
         setIsDarkMode={props.setIsDarkMode}
       />
-      {/* <Dashboard /> */}
-      {/* <IngestionStart /> */}
-      <IngestionMetadata />
-      {/* <IngestionMetadataTest /> */}
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/ingestion" element={<Ingestion />} />
+        {/* <IngestionStart /> */}
+        {/* <IngestionMetadata /> */}
+      </Routes>
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import Pencil from "../icons/Pencil";
 import SyringeSmall from "../icons/SyringeSmall";
 
@@ -6,7 +8,9 @@ const LeftNav = () => {
     // <div className="bg-white dark:bg-sidebarDark xl:w-60 xl:h-screen text-white">
     <div className="bg-white dark:bg-sidebarDark w-60 h-screen text-white">
       <div className=" px-6">
-        <h1 className="text-5xl font-bold pt-6 text-center">ComPsy</h1>
+        <Link to="/">
+          <h1 className="text-5xl font-bold pt-6 text-center">ComPsy</h1>
+        </Link>
         <div className="mt-5 ">
           <div className="mt-4">
             <div className="flex items-center gap-x-4 text-base font-semibold">

@@ -1,115 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useForm, FormProvider, useFormState } from "react-hook-form";
 
 import File from "../icons/File";
 import GreenCheck from "../icons/GreenCheck";
 import TestForm from "./TestForm";
 
-const IngestionMetadata = () => {
+const IngestionMetadata = (props) => {
   const [selectedFileIndex, setSelectedFileIndex] = useState(0);
 
-  const DUMMY_MISSING_METADATA = [
-    {
-      fileName: "file1.ext",
-      study: "Study A",
-      fields: [
-        {
-          name: "Subject",
-          type: "select",
-          options: ["1", "3", "5", "7"],
-          value: "3",
-        },
-        {
-          name: "TaskID",
-          type: "select",
-          options: ["1", "2", "3"],
-          value: "",
-        },
-        {
-          name: "Session",
-          type: "input",
-          options: null,
-          value: "test 1 session",
-        },
-        {
-          name: "Acquisition",
-          type: "select",
-          options: ["Interested", "Not Interested"],
-          value: "",
-        },
-        { name: "Administration", type: "input", options: null, value: "" },
-        { name: "Device", type: "input", options: null, value: "" },
-      ],
-    },
-    {
-      fileName: "file2.extt",
-      study: "Study A",
-      fields: [
-        {
-          name: "Subject",
-          type: "select",
-          options: ["2", "4", "6", "8"],
-          value: "4",
-        },
-        {
-          name: "TaskID",
-          type: "select",
-          options: ["4", "5", "6"],
-          value: "5",
-        },
-        { name: "Session", type: "input", options: null, value: "qqq" },
-        {
-          name: "Acquisition",
-          type: "select",
-          options: ["Interested!", "Not Interested!"],
-          value: "Not Interested!",
-        },
-        {
-          name: "Administration",
-          type: "input",
-          options: null,
-          value: "test 2",
-        },
-        { name: "Device", type: "input", options: null, value: "qqq" },
-      ],
-    },
-    {
-      fileName: "file3.exttt",
-      study: "Study A",
-      fields: [
-        {
-          name: "Subject",
-          type: "select",
-          options: ["2.5", "4.5", "6.5", "8.5"],
-          value: "",
-        },
-        {
-          name: "TaskID",
-          type: "select",
-          options: ["7", "8", "9"],
-          value: "",
-        },
-        { name: "Session", type: "input", options: null, value: "" },
-        // {
-        //   name: "Acquisition",
-        //   type: "select",
-        //   options: ["Interested!!", "Not Interested!!"],
-        //   value: "",
-        // },
-        {
-          name: "Administration",
-          type: "input",
-          options: null,
-          value: "test default value!",
-        },
-        { name: "Device", type: "input", options: null, value: "" },
-      ],
-    },
-  ];
+  const DUMMY_MISSING_METADATA = props.metadata;
 
   // Default values for useForm
   const defaultValues = {};
-  DUMMY_MISSING_METADATA.forEach((file) => {
+  DUMMY_MISSING_METADATA?.forEach((file) => {
     const fields = file.fields;
     const fileName = file.fileName;
     const dotIndex = fileName.indexOf(".");
@@ -135,17 +38,17 @@ const IngestionMetadata = () => {
 
   // console.log(defaultValues, "🍵");
 
-  const ingestedFileNames = DUMMY_MISSING_METADATA.map((file) => {
+  const ingestedFileNames = DUMMY_MISSING_METADATA?.map((file) => {
     return file.fileName;
   });
   // remove extension; '.' in name (in register in form) seems to cause error in data parsing for react-hook-form
-  const ingestedFilesNoExt = ingestedFileNames.map((file) => {
+  const ingestedFilesNoExt = ingestedFileNames?.map((file) => {
     const dotIndex = file.indexOf(".");
     const fileNameNoExt = file.slice(0, dotIndex);
     return fileNameNoExt;
   });
   // for adding back extension in data object
-  const fileExts = ingestedFileNames.map((file) => {
+  const fileExts = ingestedFileNames?.map((file) => {
     const dotIndex = file.indexOf(".");
     const fileNameNoExt = file.slice(dotIndex);
     return fileNameNoExt;
@@ -153,7 +56,7 @@ const IngestionMetadata = () => {
 
   // const watchAllFields = methods.watch();
   const watchAllFields = watch();
-  const watchAllFieldsByFile = ingestedFilesNoExt.map((id, index) => {
+  const watchAllFieldsByFile = ingestedFilesNoExt?.map((id, index) => {
     const formData = Object.fromEntries(
       Object.entries(watchAllFields).filter(([key]) => key.includes(id))
       // .map(([key, value]) => {
@@ -163,6 +66,7 @@ const IngestionMetadata = () => {
     );
     return formData;
   });
+
   const hasFilledEverything =
     Object.values(watchAllFields).filter((value) => value === "").length === 0;
   // console.log(watchAllFieldsByFile, hasFilledEverything);
@@ -176,7 +80,7 @@ const IngestionMetadata = () => {
   const onSubmit = (data) => {
     // console.log(data, "this is unformatted data");
     const dataUnformatted = data;
-    const results = ingestedFilesNoExt.map((id, index) => {
+    const results = ingestedFilesNoExt?.map((id, index) => {
       const idLength = id.length;
       // console.log(idLength);
       const idInfo = { id: id + fileExts[index] };
@@ -197,7 +101,7 @@ const IngestionMetadata = () => {
     console.log("successfully submitted!! 🎉", results);
   };
 
-  const filesTest = ingestedFileNames.map((file, index) => {
+  const filesTest = ingestedFileNames?.map((file, index) => {
     const selectedBool = +selectedFileIndex === index;
     const classes = `${
       selectedBool ? "border-2 border-white rounded" : ""
@@ -258,7 +162,7 @@ const IngestionMetadata = () => {
   });
 
   // const formsTest = ingestedFilesNoExt.map((file, index) => {
-  const formsTest = DUMMY_MISSING_METADATA.map((file, index) => {
+  const formsTest = DUMMY_MISSING_METADATA?.map((file, index) => {
     const fileName = file.fileName;
     const dotIndex = fileName.indexOf(".");
     const fileNameNoExt = fileName.slice(0, dotIndex);
@@ -276,6 +180,11 @@ const IngestionMetadata = () => {
       />
     );
   });
+
+  const backButtonHandler = () => {
+    props.setIsAtStart(true);
+    props.setMetadata(null);
+  };
 
   // const testIDs = ["11", "222"];
 
@@ -302,6 +211,7 @@ const IngestionMetadata = () => {
             submit (test)
           </button>
         </div>
+        <button onClick={backButtonHandler}>back</button>
       </div>
       <div className="w-px bg-white opacity-50"></div>
 
@@ -324,69 +234,6 @@ const IngestionMetadata = () => {
           /> */}
         </form>
         {/* </FormProvider> */}
-        {/* <form
-          className="text-white"
-          action=""
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="flex flex-col">
-            <label htmlFor="">Subject</label>
-            <select
-              {...register("subject")}
-              className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
-            >
-              <option className="h-12" value="SC007">
-                SC007
-              </option>
-              <option value="SC008">SC008</option>
-              <option value="SC009">SC009</option>
-            </select>
-          </div>
-          <div className="flex flex-col mt-4">
-            <label htmlFor="">Session</label>
-            <input
-              {...register("session")}
-              className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
-              type="text"
-            />
-          </div>
-          <div className="flex flex-col mt-4">
-            <label htmlFor="">Task</label>
-            <select
-              {...register("task")}
-              className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
-            >
-              <option className="h-12" value="CASS">
-                CASS
-              </option>
-              <option value="Task 2">Task 2</option>
-            </select>
-          </div>
-          <div className="flex flex-col mt-4">
-            <label htmlFor="">Acquisition</label>
-            <select
-              {...register("acquisition")}
-              className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
-            >
-              <option className="h-12" value="Interested">
-                Interested
-              </option>
-              <option value="Not Interested">Not Interested</option>
-            </select>
-          </div>
-          <div className="flex flex-col mt-4">
-            <label htmlFor="">Administration</label>
-            <input
-              {...register("administration")}
-              className="bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded"
-              type="text"
-            />
-          </div>
-          <input
-            className="px-8 py-4 border-2 border-white mt-4 hover:bg-lilacBlue hover:text-blackTextLight"
-            type="submit"
-          />
-        </form> */}
       </div>
     </div>
   );
