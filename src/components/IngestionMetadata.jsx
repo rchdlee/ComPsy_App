@@ -127,9 +127,21 @@ const IngestionMetadata = () => {
   // const methods = useForm({
   //   defaultValues: defaultValues,
   // });
-  const { register, handleSubmit, watch } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: defaultValues,
   });
+
+  console.log(errors, Object.entries(errors), isValid);
+
+  // const { register, handleSubmit, watch } = useForm({
+  //   defaultValues: defaultValues,
+  // });
 
   // const ingestedFiles = ["file1.exts", "file2.ext", "verycoolfile3.ext32"];
 
@@ -152,20 +164,20 @@ const IngestionMetadata = () => {
   });
 
   // const watchAllFields = methods.watch();
-  const watchAllFields = watch();
-  const watchAllFieldsByFile = ingestedFilesNoExt.map((id, index) => {
-    const formData = Object.fromEntries(
-      Object.entries(watchAllFields).filter(([key]) => key.includes(id))
-      // .map(([key, value]) => {
-      //   // return [key.slice(idLength), value];
-      //   return [key, value];
-      // })
-    );
-    return formData;
-  });
-  const hasFilledEverything =
-    Object.values(watchAllFields).filter((value) => value === "").length === 0;
-  // console.log(watchAllFieldsByFile, hasFilledEverything);
+  // const watchAllFields = watch();
+  // const watchAllFieldsByFile = ingestedFilesNoExt.map((id, index) => {
+  //   const formData = Object.fromEntries(
+  //     Object.entries(watchAllFields).filter(([key]) => key.includes(id))
+  //     // .map(([key, value]) => {
+  //     //   // return [key.slice(idLength), value];
+  //     //   return [key, value];
+  //     // })
+  //   );
+  //   return formData;
+  // });
+  // const hasFilledEverything =
+  //   Object.values(watchAllFields).filter((value) => value === "").length === 0;
+  // // console.log(watchAllFieldsByFile, hasFilledEverything);
 
   const fileNameClickHandler = (e) => {
     const id = e.target.closest("#files > div").id;
@@ -175,6 +187,7 @@ const IngestionMetadata = () => {
 
   const onSubmit = (data) => {
     // console.log(data, "this is unformatted data");
+    console.log("hi");
     const dataUnformatted = data;
     const results = ingestedFilesNoExt.map((id, index) => {
       const idLength = id.length;
@@ -221,16 +234,16 @@ const IngestionMetadata = () => {
     //   return formDataFormatted;
     // });
 
-    const fileResults = watchAllFieldsByFile[index];
-    const emptyIndices = Object.values(fileResults)
-      .map((value, index) => {
-        if (value === "") {
-          return index;
-        }
-      })
-      .filter((value) => value !== undefined);
+    // const fileResults = watchAllFieldsByFile[index];
+    // const emptyIndices = Object.values(fileResults)
+    //   .map((value, index) => {
+    //     if (value === "") {
+    //       return index;
+    //     }
+    //   })
+    //   .filter((value) => value !== undefined);
 
-    const hasCompletedAllItems = emptyIndices.length === 0 ? true : false;
+    // const hasCompletedAllItems = emptyIndices.length === 0 ? true : false;
 
     // console.log(emptyIndices, hasCompletedAllItems, "🥞");
 
@@ -251,7 +264,7 @@ const IngestionMetadata = () => {
           <File />
           <p className="">{file}</p>
         </div>
-        {hasCompletedAllItems ? <GreenCheck /> : ""}
+        {/* {hasCompletedAllItems ? <GreenCheck /> : ""} */}
         {/* <GreenCheck /> */}
       </div>
     );
@@ -267,7 +280,7 @@ const IngestionMetadata = () => {
 
     return (
       <TestForm
-        watchedFields={watchAllFieldsByFile[index]}
+        // watchedFields={watchAllFieldsByFile[index]}
         register={register}
         fileName={fileNameNoExt}
         inputData={inputData}
@@ -296,7 +309,7 @@ const IngestionMetadata = () => {
           </div> */}
           <button
             className="px-8 py-4 border-2 border-black mt-4 ml-24 bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
-            disabled={!hasFilledEverything}
+            // disabled={!hasFilledEverything}
             onClick={handleSubmit(onSubmit)}
           >
             submit (test)

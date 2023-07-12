@@ -8,12 +8,12 @@ const TestForm = (props) => {
   const display = hiddenBool ? "hidden" : "";
 
   const fileName = props.fileName;
-  const watchedFields = Object.entries(props.watchedFields).map(
-    ([key, value]) => {
-      return [key.slice(fileName.length), value];
-      // return [key, value];
-    }
-  );
+  // const watchedFields = Object.entries(props.watchedFields).map(
+  //   ([key, value]) => {
+  //     return [key.slice(fileName.length), value];
+  //     // return [key, value];
+  //   }
+  // );
 
   // console.log(watchedFields);
 
@@ -23,11 +23,11 @@ const TestForm = (props) => {
 
     // const needsFilling = field.value === "";
     // console.log(fieldName);
-    const needsFilling = watchedFields[index][1] === "";
+    // const needsFilling = watchedFields[index][1] === "";
 
-    const needsFillingStyles = `${
-      needsFilling ? "border-salmonRedActive" : "border-white"
-    }`;
+    // const needsFillingStyles = `${
+    //   needsFilling ? "border-salmonRedActive" : "border-white"
+    // }`;
 
     // if (fieldOptions) {
     //   fieldOptions.unshift("-- select --");
@@ -39,9 +39,12 @@ const TestForm = (props) => {
           <label htmlFor="">{fieldName}</label>
           <input
             // {...props.register(`${fileName}${fieldName}`)}
-            {...props.register(`${fileName}${fieldName}`)}
+            {...props.register(`${fileName}${fieldName}`, {
+              required: true,
+            })}
             // className={`bg-backgroundDark dark:autofill:shadow-[inset_0_0_0px_1000px_#222222] dark:autofill:text-fill-white dark:autofill:caret-white h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
-            className={`bg-backgroundDark h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
+            // className={`bg-backgroundDark h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
+            className={`bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded`}
             autoComplete="off"
             type="text"
           />
@@ -56,7 +59,9 @@ const TestForm = (props) => {
       //   return { value: option, label: option };
       // });
       // console.log(selectOptions);
-      const reg = props.register(`${fileName}${fieldName}`);
+      const reg = props.register(`${fileName}${fieldName}`, {
+        required: true,
+      });
 
       return (
         <div className="flex flex-col mt-4 first:mt-0" key={index}>
@@ -66,7 +71,8 @@ const TestForm = (props) => {
             ref={reg.ref}
             name={reg.name}
             onChange={(e) => reg.onChange(e)}
-            className={`bg-backgroundDark h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
+            // className={`bg-backgroundDark h-12 mt-2 px-3 border-2 ${needsFillingStyles} rounded`}
+            className={`bg-backgroundDark h-12 mt-2 px-3 border-2 border-white rounded`}
           >
             <option value="" disabled className="">
               -
