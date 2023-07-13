@@ -209,7 +209,7 @@ const IngestionStart = (props) => {
           <div className="w-3 h-3 border-2 border-white rounded-full"></div>
         </div>
         <div
-          className="text-white absolute right-60 hover:underline"
+          className="text-white absolute right-60 hover:underline underline-offset-4"
           onClick={continueHandler}
         >
           <p>Continue</p>

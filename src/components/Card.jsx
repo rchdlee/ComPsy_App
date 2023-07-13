@@ -20,15 +20,15 @@ const Card = (props) => {
 
   return (
     <div className="group w-72 h-40 relative select-none">
-      <Link to="/ingestion">
+      <Link to={`${props.path}`}>
         <div className="w-72 h-40 bg-cardLight dark:bg-cardDark rounded-lg absolute z-20 transition-transform duration-75 group-hover:-translate-x-1 group-hover:-translate-y-1 group-active:-translate-x-0.5 group-active:-translate-y-0.5">
           <div className="p-6">
             <DataCoilComp width="28" height="32" />
             <h4 className="text-lg font-bold mt-3 z-50 text-blackTextLight dark:text-white">
-              Data Management
+              {props.title}
             </h4>
             <p className="text-xs mt-0.5 text-blackTextLight dark:text-white">
-              Tools for data ingestion, querying, sampling, and editing
+              {props.desc}
             </p>
           </div>
         </div>
