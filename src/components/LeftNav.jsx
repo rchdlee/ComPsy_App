@@ -1,50 +1,21 @@
 import { Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faDatabase,
-  faSyringe,
-  faMagnifyingGlass,
-  faPen,
-  faScissors,
-  faStethoscope,
-  faGears,
-} from "@fortawesome/free-solid-svg-icons";
+// import {
+//   faDatabase,
+//   faSyringe,
+//   faMagnifyingGlass,
+//   faPen,
+//   faScissors,
+//   faStethoscope,
+//   faGears,
+// } from "@fortawesome/free-solid-svg-icons";
 
 import Pencil from "../icons/Pencil";
 import SyringeSmall from "../icons/SyringeSmall";
 
-const LeftNav = () => {
-  const DUMMY_AVAILABLE_TABS = [
-    {
-      name: "Data Management",
-      path: "/datamanagement",
-      icon: faDatabase,
-      subTabs: [
-        { name: "Ingestion", path: "/ingestion", icon: faSyringe },
-        { name: "Query", path: "/query", icon: faMagnifyingGlass },
-      ],
-    },
-    {
-      name: "Data Annotation",
-      path: "/annotation",
-      icon: faPen,
-      subTabs: [
-        { name: "Timestamps", path: "/timestamps", icon: faScissors },
-        {
-          name: "Quality Control",
-          path: "/qualitycontrol",
-          icon: faStethoscope,
-        },
-      ],
-    },
-    {
-      name: "Data Processing",
-      path: "/processing",
-      icon: faGears,
-      subTabs: [],
-    },
-  ];
+const LeftNav = (props) => {
+  const DUMMY_AVAILABLE_TABS = props.tabs;
 
   // maybe change from single import to global svg import?
   // subtab link path should add onto main tab path
@@ -74,7 +45,7 @@ const LeftNav = () => {
 
   return (
     // <div className="bg-white dark:bg-sidebarDark xl:w-60 xl:h-screen text-white">
-    <div className="bg-white dark:bg-sidebarDark w-60 h-screen text-white">
+    <div className="bg-backgroundLight dark:bg-sidebarDark w-60 h-screen text-blackTextLight dark:text-white">
       <div className=" px-6">
         <Link to="/">
           <h1 className="text-5xl font-bold pt-6 text-center">ComPsy</h1>

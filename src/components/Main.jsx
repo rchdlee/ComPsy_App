@@ -12,7 +12,7 @@ const Main = (props) => {
         setIsDarkMode={props.setIsDarkMode}
       />
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Dashboard tabs={props.tabs} />} />
         <Route path="/ingestion" element={<Ingestion />} />
         {/* <IngestionStart /> */}
         {/* <IngestionMetadata /> */}

@@ -6,6 +6,7 @@ export default {
   theme: {
     colors: {
       backgroundDark: "#222222",
+      // backgroundLight: "#F3F3F7",
       backgroundLight: "#F3F3F7",
       sidebarDark: "#161616",
       cardDark: "#303030",

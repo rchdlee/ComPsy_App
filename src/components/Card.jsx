@@ -1,5 +1,6 @@
 // import { ReactComponent as Datacoil } from "../icons/data-coil.svg";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import DataCoilComp from "../icons/DataCoilComp";
 
@@ -23,7 +24,11 @@ const Card = (props) => {
       <Link to={`${props.path}`}>
         <div className="w-72 h-40 bg-cardLight dark:bg-cardDark rounded-lg absolute z-20 transition-transform duration-75 group-hover:-translate-x-1 group-hover:-translate-y-1 group-active:-translate-x-0.5 group-active:-translate-y-0.5">
           <div className="p-6">
-            <DataCoilComp width="28" height="32" />
+            {/* <DataCoilComp width="28" height="32" /> */}
+            <FontAwesomeIcon
+              icon={props.icon}
+              className="text-blackTextLight dark:text-white h-8 "
+            />
             <h4 className="text-lg font-bold mt-3 z-50 text-blackTextLight dark:text-white">
               {props.title}
             </h4>
