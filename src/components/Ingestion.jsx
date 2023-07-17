@@ -1,36 +1,59 @@
 import IngestionStart from "./IngestionStart";
 import IngestionMetadata from "./IngestionMetadata";
+import LoadScreen from "./LoadScreen";
 import { useState } from "react";
+import { useEffect } from "react";
 
 const Ingestion = () => {
   const [isAtStart, setIsAtStart] = useState(true);
+  const [availableStudies, setAvailableStudies] = useState(null);
+  const [selectedStudy, setSelectedStudy] = useState(null);
+  const [filePaths, setFilePaths] = useState(null);
   const [metadata, setMetadata] = useState(null);
 
-  console.log(metadata, "😋");
+  // console.log(metadata, "😋");
+  const DUMMY_AVAILABLE_STUDIES = [
+    "Study 1",
+    "Study 2",
+    "Social Coordination",
+    "Study 4",
+    "Study 5",
+    "Study 6",
+  ];
 
-  if (isAtStart) {
+  const retrieveAvailableStudies = () => {
+    setAvailableStudies(DUMMY_AVAILABLE_STUDIES);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.log("retrive studies (timeout)");
+      retrieveAvailableStudies();
+    }, 500);
+  }, []);
+
+  if (isAtStart && !availableStudies) {
+    return <LoadScreen message={"Retrieving Available Studies..."} />;
+  }
+
+  if (isAtStart && availableStudies) {
     return (
       <div>
-        <IngestionStart setIsAtStart={setIsAtStart} setMetadata={setMetadata} />
+        <IngestionStart
+          setIsAtStart={setIsAtStart}
+          availableStudies={availableStudies}
+          setMetadata={setMetadata}
+          selectedStudy={selectedStudy}
+          setSelectedStudy={setSelectedStudy}
+          filePaths={filePaths}
+          setFilePaths={setFilePaths}
+        />
       </div>
     );
   }
 
   if (!isAtStart && !metadata) {
-    return (
-      <div className="flex items-center mt-24 flex-col gap-8">
-        <div
-          className="inline-block w-20 h-20 after:content-[' '] after:block after:w-16 after:h-16 after:m-2 after:border-[6px] 
-          after:border-t-blackTextLight after:border-l-white after:border-b-blackTextLight after:border-r-white
-          dark:after:border-t-white dark:after:border-l-backgroundDark dark:after:border-b-white dark:after:border-r-backgroundDark
-          after:animate-spin
-          after:rounded-full"
-        ></div>
-        <p className="text-blackTextLight dark:text-white">
-          Retrieving Metadata...
-        </p>
-      </div>
-    );
+    return <LoadScreen message={"Retrieving Metadata..."} />;
   }
 
   if (!isAtStart && metadata) {

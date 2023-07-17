@@ -5,13 +5,15 @@ export default {
   darkMode: "class",
   theme: {
     colors: {
+      transparent: 'transparent',
       backgroundDark: "#222222",
       // backgroundLight: "#F3F3F7",
       backgroundLight: "#F3F3F7",
       sidebarDark: "#161616",
       cardDark: "#303030",
       cardDarkHover: "#292929",
-      cardLight: "#E9EBF2",
+      // cardLight: "#E9EBF2",
+      cardLight: "#dde0eb",
       white: "#F7F7F7",
       lilacBlue: "#A0B3F6",
       lilacBlueActive: "#6C87E7",

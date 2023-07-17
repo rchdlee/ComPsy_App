@@ -26,7 +26,7 @@ const TopBar = (props) => {
   // pathFormatted.shift();
 
   const pathDepth = pathFormatted.length;
-  console.log(path, pathArray, pathFormatted, pathDepth);
+  // console.log(path, pathArray, pathFormatted, pathDepth);
 
   const NavPath =
     path !== "/" &&
