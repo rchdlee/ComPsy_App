@@ -8,7 +8,8 @@ const Dashboard = (props) => {
         path={tab.path}
         icon={tab.icon}
         title={tab.name}
-        desc="Tools for data ingestion, querying, sampling, and editing"
+        desc={tab.description}
+        key={tab.name}
       />
     );
   });

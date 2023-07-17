@@ -6,7 +6,7 @@
   @apply transition-colors duration-1000;
 } */
 
-.lds-dual-ring {
+/* .lds-dual-ring {
   display: inline-block;
   width: 80px;
   height: 80px;
@@ -29,7 +29,7 @@
   100% {
     transform: rotate(360deg);
   }
-}
+} */
 
 /* width */
 ::-webkit-scrollbar {

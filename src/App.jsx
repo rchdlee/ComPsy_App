@@ -16,9 +16,10 @@ import {
   faAtom,
   faSun,
   faMoon,
+  faHouse,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
+import { faFaceSmile, faFileLines } from "@fortawesome/free-regular-svg-icons";
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -26,7 +27,7 @@ function App() {
   const DUMMY_AVAILABLE_TABS = [
     {
       name: "Data Management",
-      path: "/datamanagement",
+      path: "/data-management",
       icon: "database",
       color: "lilacBlue",
       description: "Tools for data ingestion, querying, sampling, and editing",
@@ -82,12 +83,14 @@ function App() {
     faAtom,
     faSun,
     faMoon,
-    faFaceSmile
+    faFaceSmile,
+    faHouse,
+    faFileLines
   );
 
   return (
     <div className={isDarkMode ? "dark" : ""}>
-      <div className="w-screen h-max bg-white dark:bg-backgroundDark flex z-0">
+      <div className="w-screen h-max bg-backgroundLight dark:bg-backgroundDark flex z-0">
         <LeftNav tabs={DUMMY_AVAILABLE_TABS} />
         <Main
           isDarkMode={isDarkMode}

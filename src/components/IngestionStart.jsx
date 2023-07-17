@@ -150,20 +150,22 @@ const IngestionStart = (props) => {
     setTimeout(() => {
       props.setMetadata(DUMMY_MISSING_METADATA);
       console.log("hi 😅");
-    }, 2000);
+    }, 4000);
   };
 
   const handleFileInput = () => {};
 
   const DUMMY_AVAILABLE_STUDIES_JSX = DUMMY_AVAILABLE_STUDIES.map((study) => {
     const selected =
-      selectedStudy === study ? "bg-lilacBlue" : "text-white hover:bg-cardDark";
+      selectedStudy === study
+        ? "bg-lilacBlue"
+        : "text-blackTextLight dark:text-white hover:bg-cardLight dark:hover:bg-cardDark";
 
     return (
       <div
         key={study}
         onClick={studyClickHandler}
-        className={`border-2 border-white rounded h-14 flex items-center mt-2 first:mt-0 pl-4 mr-1 ${selected}`}
+        className={`border-2 border-blackTextLight dark:border-white rounded h-14 flex items-center mt-2 first:mt-0 pl-4 mr-1 ${selected}`}
       >
         {study}
       </div>
@@ -174,12 +176,14 @@ const IngestionStart = (props) => {
     <div className="mt-16">
       <div className="flex justify-center gap-x-20">
         <div className="w-80">
-          <h4 className="text-lg text-white">Select Study</h4>
+          <h4 className="text-lg text-blackTextLight dark:text-white">
+            Select Study
+          </h4>
           <div className="mt-6 h-80 overflow-y-scroll">
             {DUMMY_AVAILABLE_STUDIES_JSX}
           </div>
         </div>
-        <div className="w-80 text-white">
+        <div className="w-80 text-blackTextLight dark:text-white">
           <h4>Upload File(s)</h4>
           <div className="mt-8 border-2">
             <div {...getRootProps()} className="h-64">
@@ -205,11 +209,11 @@ const IngestionStart = (props) => {
       </div>
       <div className="flex items-center justify-center mt-32 relative">
         <div className="flex gap-2">
-          <div className="w-3 h-3 border-2 border-white bg-white rounded-full"></div>
-          <div className="w-3 h-3 border-2 border-white rounded-full"></div>
+          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white bg-blackTextLight dark:bg-white rounded-full"></div>
+          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white rounded-full"></div>
         </div>
         <div
-          className="text-white absolute right-60 hover:underline underline-offset-4"
+          className="text-blackTextLight dark:text-white absolute right-60 hover:underline underline-offset-4"
           onClick={continueHandler}
         >
           <p>Continue</p>

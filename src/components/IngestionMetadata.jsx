@@ -1,5 +1,6 @@
 import { useState, useEffect, Fragment } from "react";
 import { useForm, FormProvider, useFormState } from "react-hook-form";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import File from "../icons/File";
 import GreenCheck from "../icons/GreenCheck";
@@ -104,8 +105,10 @@ const IngestionMetadata = (props) => {
   const filesTest = ingestedFileNames?.map((file, index) => {
     const selectedBool = +selectedFileIndex === index;
     const classes = `${
-      selectedBool ? "border-2 border-white rounded" : ""
-    }  px-8 h-16  mt-2 flex justify-between items-center hover:bg-cardDark`;
+      selectedBool
+        ? "border-2 border-blackTextLight dark:border-white rounded"
+        : ""
+    }  px-8 h-16  mt-2 flex justify-between items-center hover:bg-cardLight dark:hover:bg-cardDark rounded`;
 
     // const results = ingestedFilesNoExt.map((id, index) => {
     //   const idLength = id.length;
@@ -151,8 +154,13 @@ const IngestionMetadata = (props) => {
         id={index}
         key={index}
       >
-        <div className="flex gap-x-4">
-          <File />
+        <div className="flex gap-x-4 items-center text-blackTextLight dark:text-white">
+          <FontAwesomeIcon
+            icon={["far", "file-lines"]}
+            // size="lg"
+            className="h-6"
+          />
+          {/* <File /> */}
           <p className="">{file}</p>
         </div>
         {hasCompletedAllItems ? <GreenCheck /> : ""}
@@ -190,7 +198,7 @@ const IngestionMetadata = (props) => {
 
   return (
     <div className="h-96 mt-16 flex justify-center gap-x-16">
-      <div className="w-96 text-white">
+      <div className="w-96 text-blackTExtLight dark:text-white">
         <h4 className="text-lg">
           Please fill in missing metadata for the following files:
         </h4>
@@ -213,7 +221,7 @@ const IngestionMetadata = (props) => {
         </div>
         <button onClick={backButtonHandler}>back</button>
       </div>
-      <div className="w-px bg-white opacity-50"></div>
+      <div className="w-px bg-blackTextLight dark:bg-white opacity-50"></div>
 
       {/* FORM */}
       {/* <div className="w-96 overflow-scroll pr-4"> */}
@@ -222,7 +230,7 @@ const IngestionMetadata = (props) => {
         <form
           // onSubmit={methods.handleSubmit(onSubmit)}
           onSubmit={handleSubmit(onSubmit)}
-          className="text-white"
+          className="text-blackTextLight dark:text-white"
         >
           {formsTest}
           {/* <TestForm testid={"11"} hidden={true} />
