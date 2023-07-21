@@ -44,57 +44,26 @@ const LeftNav = (props) => {
     );
   });
 
+  const logoutHandler = () => {
+    props.setDUMMY_LOGGED_IN(false);
+  };
+
   return (
     // <div className="bg-white dark:bg-sidebarDark xl:w-60 xl:h-screen text-white">
-    <div className="bg-white dark:bg-sidebarDark w-64 h-screen text-blackTextLight dark:text-white">
+    <div className="flex flex-col justify-between bg-white dark:bg-sidebarDark w-64 h-screen text-blackTextLight dark:text-white">
       <div className=" px-4">
         <Link to="/">
           <h1 className="text-5xl font-bold pt-6 text-center">ComPsy</h1>
         </Link>
-        <div className="mt-8">
-          {tabs}
-          {/* <div className="mt-4">
-            <div className="flex items-center gap-x-4 text-base font-semibold">
-              <FontAwesomeIcon icon={faDatabase} size="lg" />
-              <p className="text-lg">Main</p>
-            </div>
-            <div className="flex items-center gap-x-3 ml-6 mt-2">
-              <SyringeSmall />
-              <p className="text-sm">Section</p>
-            </div>
-            <div className="flex items-center gap-x-3 ml-6 mt-2">
-              <SyringeSmall />
-              <p className="text-sm">Section</p>
-            </div>
-            <div className="flex items-center gap-x-3 ml-6 mt-2">
-              <SyringeSmall />
-              <p className="text-sm">Section</p>
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="flex items-center gap-x-4 text-base font-semibold">
-              <Pencil />
-              <p className="text-lg">Main</p>
-            </div>
-            <div className="flex items-center gap-x-3 ml-6 mt-2">
-              <SyringeSmall />
-              <p className="text-sm">Section</p>
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="flex items-center gap-x-4 text-base font-semibold">
-              <Pencil />
-              <p className="text-lg">Main</p>
-            </div>
-            <div className="flex items-center gap-x-3 ml-6 mt-2">
-              <SyringeSmall />
-              <p className="text-sm">Section</p>
-            </div>
-            <div className="flex items-center gap-x-3 ml-6 mt-2">
-              <SyringeSmall />
-              <p className="text-sm">Section</p>
-            </div>
-          </div> */}
+        <div className="mt-8">{tabs}</div>
+      </div>
+      <div className="flex justify-end mb-4 mr-4">
+        <div
+          onClick={logoutHandler}
+          className="w-28 px-4 py-3 rounded flex items-center justify-around  hover:bg-cardLight dark:hover:bg-cardDark"
+        >
+          <button className="text-sm">Logout</button>
+          <FontAwesomeIcon icon="arrow-right-from-bracket" />
         </div>
       </div>
     </div>

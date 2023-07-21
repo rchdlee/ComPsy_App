@@ -198,7 +198,7 @@ const IngestionMetadata = (props) => {
 
   return (
     <div className="h-96 mt-16 flex justify-center gap-x-16">
-      <div className="w-96 text-blackTExtLight dark:text-white">
+      <div className="w-96 text-blackTextLight dark:text-white">
         <h4 className="text-lg">
           Please fill in missing metadata for the following files:
         </h4>

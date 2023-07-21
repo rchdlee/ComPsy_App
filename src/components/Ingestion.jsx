@@ -29,7 +29,7 @@ const Ingestion = () => {
     setTimeout(() => {
       console.log("retrive studies (timeout)");
       retrieveAvailableStudies();
-    }, 500);
+    }, 2500);
   }, []);
 
   if (isAtStart && !availableStudies) {
