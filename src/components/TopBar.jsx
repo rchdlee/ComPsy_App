@@ -47,7 +47,10 @@ const TopBar = (props) => {
     });
 
   const handleDarkModeSwitch = () => {
-    props.setIsDarkMode((prevState) => !prevState);
+    props.setIsDarkMode((prevState) => {
+      localStorage.setItem("darkMode", !prevState);
+      return !prevState;
+    });
   };
 
   return (

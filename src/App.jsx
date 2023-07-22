@@ -47,9 +47,8 @@ function App() {
     faFileLines,
     faArrowRightFromBracket
   );
-
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
+  const savedIsDarkMode = JSON.parse(localStorage.getItem("darkMode"));
+  const [isDarkMode, setIsDarkMode] = useState(savedIsDarkMode);
   const [DUMMY_LOGGED_IN, setDUMMY_LOGGED_IN] = useState(false);
 
   // const DUMMY_AVAILABLE_TABS = [
