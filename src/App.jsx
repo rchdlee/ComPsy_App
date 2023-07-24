@@ -22,6 +22,8 @@ import {
   faMoon,
   faHouse,
   faArrowRightFromBracket,
+  faBars,
+  faX,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faFaceSmile, faFileLines } from "@fortawesome/free-regular-svg-icons";
@@ -45,11 +47,13 @@ function App() {
     faFaceSmile,
     faHouse,
     faFileLines,
-    faArrowRightFromBracket
+    faArrowRightFromBracket,
+    faBars,
+    faX
   );
   const savedIsDarkMode = JSON.parse(localStorage.getItem("darkMode"));
   const [isDarkMode, setIsDarkMode] = useState(savedIsDarkMode);
-  const [DUMMY_LOGGED_IN, setDUMMY_LOGGED_IN] = useState(false);
+  const [DUMMY_LOGGED_IN, setDUMMY_LOGGED_IN] = useState(true);
 
   // const DUMMY_AVAILABLE_TABS = [
   //   {

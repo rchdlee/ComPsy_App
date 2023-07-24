@@ -2,11 +2,11 @@ import Card from "./Card";
 
 const DataManagement = (props) => {
   return (
-    <div className="w-[64rem] mx-auto mt-12">
+    <div className="sm:w-[560px] lg:w-[650px] xl:w-[900px] 2xl:w-[1050px] mx-auto mt-12">
       <h3 className="text-2xl text-blackTextLight dark:text-white font-medium">
         Data Management
       </h3>
-      <div className="mt-8 grid grid-cols-3 justify-items-start gap-y-8">
+      <div className="mt-8 grid sm:grid-cols-2 xl:grid-cols-3 justify-items-start gap-y-8">
         <Card
           color="lilacBlue"
           path="/data-management/ingestion"

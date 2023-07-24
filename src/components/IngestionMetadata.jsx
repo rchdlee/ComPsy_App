@@ -197,51 +197,70 @@ const IngestionMetadata = (props) => {
   // const testIDs = ["11", "222"];
 
   return (
-    <div className="h-96 mt-16 flex justify-center gap-x-16">
-      <div className="w-96 text-blackTextLight dark:text-white">
-        <h4 className="text-lg">
-          Please fill in missing metadata for the following files:
-        </h4>
-        <div className="mt-6" id="files">
-          {filesTest}
-          {/* <div className="border-2 border-white px-8 rounded h-16 flex justify-between items-center">
+    <div>
+      <div className="md:w-[650px] xl:w-[900px] 2xl:w-[1050px] mx-auto mt-16 flex justify-center gap-x-20">
+        {/* <div className="w-96 text-blackTextLight dark:text-white"> */}
+        <div className="w-60 lg:w-64 xl:w-80 text-blackTextLight dark:text-white">
+          <h4 className="text-lg">
+            Please fill in missing metadata for the following files:
+          </h4>
+          <div className="mt-6" id="files">
+            {filesTest}
+            {/* <div className="border-2 border-white px-8 rounded h-16 flex justify-between items-center">
             <div className="flex gap-x-4">
-              <File />
-              <p className="">filename1.extension</p>
+            <File />
+            <p className="">filename1.extension</p>
             </div>
             <GreenCheck />
           </div> */}
-          <button
-            className="px-8 py-4 border-2 border-black mt-4 ml-24 bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
-            disabled={!hasFilledEverything}
-            onClick={handleSubmit(onSubmit)}
-          >
-            submit (test)
-          </button>
+            <div className="flex justify-center">
+              <button
+                className="px-8 py-4 border-2 border-black mt-16 xl:mt-8 bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
+                disabled={!hasFilledEverything}
+                onClick={handleSubmit(onSubmit)}
+              >
+                Submit (test)
+              </button>
+            </div>
+          </div>
         </div>
-        <button onClick={backButtonHandler}>back</button>
-      </div>
-      <div className="w-px bg-blackTextLight dark:bg-white opacity-50"></div>
+        <div className="w-px bg-blackTextLight dark:bg-white opacity-50"></div>
 
-      {/* FORM */}
-      {/* <div className="w-96 overflow-scroll pr-4"> */}
-      <div className="w-96 ">
-        {/* <FormProvider {...methods}> */}
-        <form
-          // onSubmit={methods.handleSubmit(onSubmit)}
-          onSubmit={handleSubmit(onSubmit)}
-          className="text-blackTextLight dark:text-white"
-        >
-          {formsTest}
-          {/* <TestForm testid={"11"} hidden={true} />
+        {/* FORM */}
+        {/* <div className="w-96 overflow-scroll pr-4"> */}
+        {/* <div className="w-96 "> */}
+        <div className="w-60 lg:w-64 xl:w-80">
+          {/* <FormProvider {...methods}> */}
+          <form
+            // onSubmit={methods.handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit)}
+            className="text-blackTextLight dark:text-white"
+          >
+            {formsTest}
+            {/* <TestForm testid={"11"} hidden={true} />
             <TestForm testid={"222"} hidden={false} /> */}
-          {/* <input
+            {/* <input
             className="px-8 py-4 border-2 border-black mt-4 bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
             disabled={!hasFilledEverything}
             type="submit"
           /> */}
-        </form>
-        {/* </FormProvider> */}
+          </form>
+          {/* </FormProvider> */}
+        </div>
+      </div>
+      <div className="flex items-center justify-center mt-16 lg:mt-32 2xl:mt-48 relative md:w-[650px] xl:w-[900px] 2xl:w-[1050px] mx-auto">
+        <div className="flex gap-2">
+          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white bg-blackTextLight dark:bg-white rounded-full"></div>
+          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white rounded-full"></div>
+        </div>
+
+        <button
+          onClick={backButtonHandler}
+          // className="mt-16 lg:mt-32 2xl:mt-48"
+          className="text-blackTextLight dark:text-white absolute left-5 xl:left-12 2xl:left-24 hover:underline underline-offset-4"
+        >
+          Back
+        </button>
       </div>
     </div>
   );

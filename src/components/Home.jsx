@@ -51,7 +51,7 @@ const Home = (props) => {
   ];
 
   return (
-    <div className="w-screen h-max bg-backgroundLight dark:bg-backgroundDark flex z-0">
+    <div className="w-screen h-full sm:h-screen bg-backgroundLight dark:bg-backgroundDark flex flex-col md:flex-row  z-0">
       <LeftNav
         tabs={DUMMY_AVAILABLE_TABS}
         setDUMMY_LOGGED_IN={props.setDUMMY_LOGGED_IN}
@@ -74,6 +74,7 @@ const Home = (props) => {
         setIsDarkMode={props.setIsDarkMode}
         tabs={DUMMY_AVAILABLE_TABS}
       />
+      {/* <div className="h-24 bg-backgroundLight dark:bg-backgroundDark"></div> */}
     </div>
   );
 };

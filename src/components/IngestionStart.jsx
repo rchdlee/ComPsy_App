@@ -285,7 +285,7 @@ const IngestionStart = (props) => {
   return (
     <div className="mt-16">
       <div className="flex justify-center gap-x-20">
-        <div className="w-80">
+        <div className="w-60 lg:w-64 xl:w-80">
           <h4 className="text-lg text-blackTextLight dark:text-white">
             Select Study
           </h4>
@@ -294,7 +294,7 @@ const IngestionStart = (props) => {
           </div>
         </div>
         {/*  */}
-        <div className="w-80 text-blackTextLight dark:text-white">
+        <div className="w-60 lg:w-64 xl:w-80 text-blackTextLight dark:text-white">
           <div className="flex items-center gap-3">
             <h4>Paste File Path(s)</h4>
             {/* ADD ON HOVER TOOLTOP FOR COPYING FILE PATH */}
@@ -358,13 +358,13 @@ const IngestionStart = (props) => {
           </div>
         </div> */}
       </div>
-      <div className="flex items-center justify-center mt-32 relative">
+      <div className="flex items-center justify-center mt-16 lg:mt-32 2xl:mt-48 relative">
         <div className="flex gap-2">
           <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white bg-blackTextLight dark:bg-white rounded-full"></div>
           <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white rounded-full"></div>
         </div>
         <div
-          className="text-blackTextLight dark:text-white absolute right-60 hover:underline underline-offset-4"
+          className="text-blackTextLight dark:text-white absolute right-20 md:right-40 xl:right-60 hover:underline underline-offset-4"
           // onClick={continueHandler}
           onClick={handleSubmit(onSubmit)}
         >

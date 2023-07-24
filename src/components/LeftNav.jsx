@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,6 +16,7 @@ import Pencil from "../icons/Pencil";
 import SyringeSmall from "../icons/SyringeSmall";
 
 const LeftNav = (props) => {
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
   const DUMMY_AVAILABLE_TABS = props.tabs;
 
   // maybe change from single import to global svg import?
@@ -48,22 +50,62 @@ const LeftNav = (props) => {
     props.setDUMMY_LOGGED_IN(false);
   };
 
+  const menuOpenHandler = () => {
+    console.log("menu opened!");
+    setMenuIsOpen(true);
+
+    // disable scroll when mobile menu is open
+    const topScroll = window.scrollY;
+    window.onscroll = function () {
+      window.scrollTo(0, topScroll);
+    };
+  };
+
+  const menuCloseHandler = () => {
+    setMenuIsOpen(false);
+
+    // re-enable scroll on close
+    window.onscroll = function () {};
+  };
+
   return (
     // <div className="bg-white dark:bg-sidebarDark xl:w-60 xl:h-screen text-white">
-    <div className="flex flex-col justify-between bg-white dark:bg-sidebarDark w-64 h-screen text-blackTextLight dark:text-white">
-      <div className=" px-4">
-        <Link to="/">
-          <h1 className="text-5xl font-bold pt-6 text-center">ComPsy</h1>
-        </Link>
-        <div className="mt-8">{tabs}</div>
+    <div className="relative">
+      <div className="lg:hidden bg-backgroundLight dark:bg-backgroundDark border-b-2 border-blackTextLight dark:border-white w-screen fixed z-40">
+        <FontAwesomeIcon
+          icon="bars"
+          size="2xl"
+          className="text-blackTextLight dark:text-white mt-6 ml-6 mb-4"
+          onClick={menuOpenHandler}
+        />
       </div>
-      <div className="flex justify-end mb-4 mr-4">
-        <div
-          onClick={logoutHandler}
-          className="w-28 px-4 py-3 rounded flex items-center justify-around  hover:bg-cardLight dark:hover:bg-cardDark"
-        >
-          <button className="text-sm">Logout</button>
-          <FontAwesomeIcon icon="arrow-right-from-bracket" />
+      <div
+        className={`absolute ${
+          menuIsOpen ? "translate-x-full -left-64" : "-left-64"
+        } lg:static top-0 transition-transform duration-300 flex flex-col justify-between bg-white dark:bg-sidebarDark w-64 h-screen text-blackTextLight dark:text-white z-40`}
+      >
+        <div className=" px-4">
+          {/* <div className="flex items-center flex-row-reverse justify-center gap-4 mt-4"> */}
+          {/* <div> */}
+          <div className="flex justify-end mt-6 mr-2 lg:hidden">
+            <FontAwesomeIcon icon="x" size="xl" onClick={menuCloseHandler} />
+          </div>
+          <Link to="/">
+            <h1 className="text-5xl font-bold mt-2 pt-2 lg:pt-6 text-center">
+              ComPsy
+            </h1>
+          </Link>
+          {/* </div> */}
+          <div className="mt-6 xl:mt-8">{tabs}</div>
+        </div>
+        <div className="flex justify-end mb-4 mr-4">
+          <div
+            onClick={logoutHandler}
+            className="w-28 px-4 py-3 rounded flex items-center justify-around  hover:bg-cardLight dark:hover:bg-cardDark"
+          >
+            <button className="text-sm">Logout</button>
+            <FontAwesomeIcon icon="arrow-right-from-bracket" />
+          </div>
         </div>
       </div>
     </div>
