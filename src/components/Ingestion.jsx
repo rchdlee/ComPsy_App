@@ -34,7 +34,10 @@ const Ingestion = () => {
 
   if (isAtStart && !availableStudies) {
     return (
-      <LoadScreen message={"Retrieving Available Studies..."} marginTop="24" />
+      <div>
+        <div className="mt-24"></div>
+        <LoadScreen message={"Retrieving Available Studies..."} marginTop="0" />
+      </div>
     );
   }
 
@@ -55,7 +58,12 @@ const Ingestion = () => {
   }
 
   if (!isAtStart && !metadata) {
-    return <LoadScreen message={"Retrieving Metadata..."} marginTop="24" />;
+    return (
+      <div>
+        <div className="mt-24"></div>
+        <LoadScreen message={"Retrieving Metadata..."} marginTop="0" />;
+      </div>
+    );
   }
 
   if (!isAtStart && metadata) {

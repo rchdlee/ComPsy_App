@@ -1,7 +1,9 @@
 const LoadScreen = (props) => {
+  const marginTop = props.marginTop;
+
   return (
     <div
-      className={`flex items-center mt-${props.marginTop} flex-col ${
+      className={`flex items-center mt-${marginTop} flex-col ${
         props.message ? "gap-8" : ""
       }`}
     >

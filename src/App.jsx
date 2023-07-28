@@ -32,6 +32,10 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import PrivateRoutes from "./components/PrivateRoutes";
 
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import RootLayout from "./components/RootLayout";
+import Error from "./components/Error";
+
 function App() {
   library.add(
     faDatabase,
@@ -53,59 +57,109 @@ function App() {
   );
   const savedIsDarkMode = JSON.parse(localStorage.getItem("darkMode"));
   const [isDarkMode, setIsDarkMode] = useState(savedIsDarkMode);
-  const [DUMMY_LOGGED_IN, setDUMMY_LOGGED_IN] = useState(true);
+  const [DUMMY_LOGGED_IN, setDUMMY_LOGGED_IN] = useState(false);
 
-  // const DUMMY_AVAILABLE_TABS = [
-  //   {
-  //     name: "Data Management",
-  //     path: "/data-management",
-  //     icon: "database",
-  //     color: "lilacBlue",
-  //     description: "Tools for data ingestion, querying, sampling, and editing",
-  //     subTabs: [
-  //       { name: "Ingestion", path: "/ingestion", icon: "syringe" },
-  //       { name: "Query", path: "/query", icon: "magnifying-glass" },
-  //     ],
-  //   },
-  //   {
-  //     name: "Data Annotation",
-  //     path: "/annotation",
-  //     icon: "pen",
-  //     color: "lilacBlue",
+  const DUMMY_AVAILABLE_TABS = [
+    {
+      name: "Data Management",
+      path: "/data-management",
+      icon: "database",
+      color: "lilacBlue",
+      description: "Tools for data ingestion, querying, sampling, and editing",
+      subTabs: [
+        { name: "Ingestion", path: "/ingestion", icon: "syringe" },
+        { name: "Query", path: "/query", icon: "magnifying-glass" },
+      ],
+    },
+    {
+      name: "Data Annotation",
+      path: "/annotation",
+      icon: "pen",
+      color: "lilacBlue",
 
-  //     description: "Tools for annotations such as timestamps, QC, and labels",
-  //     subTabs: [
-  //       { name: "Timestamps", path: "/timestamps", icon: "scissors" },
-  //       {
-  //         name: "Quality Control",
-  //         path: "/qualitycontrol",
-  //         icon: "stethoscope",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     name: "Data Processing",
-  //     path: "/processing",
-  //     icon: "gears",
-  //     color: "lilacBlue",
+      description: "Tools for annotations such as timestamps, QC, and labels",
+      subTabs: [
+        { name: "Timestamps", path: "/timestamps", icon: "scissors" },
+        {
+          name: "Quality Control",
+          path: "/qualitycontrol",
+          icon: "stethoscope",
+        },
+      ],
+    },
+    {
+      name: "Data Processing",
+      path: "/processing",
+      icon: "gears",
+      color: "lilacBlue",
 
-  //     description: "Tools for per-processing data",
-  //     subTabs: [],
-  //   },
-  //   {
-  //     name: "Research Management",
-  //     path: "/management",
-  //     icon: "atom",
-  //     color: "salmonRed",
+      description: "Tools for per-processing data",
+      subTabs: [],
+    },
+    {
+      name: "Research Management",
+      path: "/management",
+      icon: "atom",
+      color: "salmonRed",
 
-  //     description: "Tools for creating and editing research projects",
-  //     subTabs: [],
-  //   },
-  // ];
+      description: "Tools for creating and editing research projects",
+      subTabs: [],
+    },
+  ];
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <RootLayout
+          tabs={DUMMY_AVAILABLE_TABS}
+          DUMMY_LOGGED_IN={DUMMY_LOGGED_IN}
+          setDUMMY_LOGGED_IN={setDUMMY_LOGGED_IN}
+          isDarkMode={isDarkMode}
+          setIsDarkMode={setIsDarkMode}
+        />
+      ),
+      errorElement: (
+        <Error
+          tabs={DUMMY_AVAILABLE_TABS}
+          DUMMY_LOGGED_IN={DUMMY_LOGGED_IN}
+          setDUMMY_LOGGED_IN={setDUMMY_LOGGED_IN}
+          isDarkMode={isDarkMode}
+          setIsDarkMode={setIsDarkMode}
+        />
+      ),
+      children: [
+        {
+          index: true,
+          element: <Dashboard tabs={DUMMY_AVAILABLE_TABS} />,
+        },
+        {
+          path: "/data-management",
+          element: <DataManagement />,
+        },
+        {
+          path: "data-management/ingestion",
+          element: <Ingestion />,
+        },
+      ],
+    },
+    {
+      path: "login",
+      element: (
+        <Login
+          isDarkMode={isDarkMode}
+          setIsDarkMode={setIsDarkMode}
+          DUMMY_LOGGED_IN={DUMMY_LOGGED_IN}
+          setDUMMY_LOGGED_IN={setDUMMY_LOGGED_IN}
+        />
+      ),
+    },
+  ]);
 
   return (
     <div className={isDarkMode ? "dark" : ""}>
-      <Routes>
+      <RouterProvider router={router} />
+      {/* <Routes>
         <Route element={<PrivateRoutes DUMMY_LOGGED_IN={DUMMY_LOGGED_IN} />}>
           <Route
             element={
@@ -129,7 +183,7 @@ function App() {
             />
           }
         />
-      </Routes>
+      </Routes> */}
 
       {/* <div className="w-screen h-max bg-backgroundLight dark:bg-backgroundDark flex z-0">
         <LeftNav tabs={DUMMY_AVAILABLE_TABS} /> */}

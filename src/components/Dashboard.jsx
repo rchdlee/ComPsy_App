@@ -20,7 +20,7 @@ const Dashboard = (props) => {
         My Dashboard
       </h3>
       {/* <div className="w-[58rem] flex flex-wrap gap-8 justify-center mx-auto"> */}
-      <div className="mt-8 grid sm:grid-cols-2 xl:grid-cols-3 justify-items-center md:gap-x-12 lg:gap-x-0 gap-y-8">
+      <div className="mt-8 grid sm:grid-cols-2 xl:grid-cols-3 justify-items-stretch md:gap-x-12 lg:gap-x-0 gap-y-8">
         {cards}
         {/* <Card
           color="lilacBlue"

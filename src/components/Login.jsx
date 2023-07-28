@@ -22,7 +22,7 @@ const Login = (props) => {
     });
   };
 
-  console.log("errors", errors);
+  // console.log("errors", errors);
 
   const onSubmit = (data) => {
     console.log(data);

@@ -250,8 +250,8 @@ const IngestionMetadata = (props) => {
       </div>
       <div className="flex items-center justify-center mt-16 lg:mt-32 2xl:mt-48 relative md:w-[650px] xl:w-[900px] 2xl:w-[1050px] mx-auto">
         <div className="flex gap-2">
-          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white bg-blackTextLight dark:bg-white rounded-full"></div>
           <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white rounded-full"></div>
+          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white bg-blackTextLight dark:bg-white rounded-full"></div>
         </div>
 
         <button
