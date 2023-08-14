@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import {
@@ -35,7 +35,7 @@ const LeftNav = (props) => {
           tab.subTabs.map((subtab) => {
             return (
               <Link to={tab.path + subtab.path} key={subtab.name}>
-                <div className="h-10 ml-6 pl-4 flex items-center gap-x-3 rounded hover:bg-cardLight dark:hover:bg-cardDark">
+                <div className="h-8 mb-0.5 ml-6 pl-4 flex items-center gap-x-3 rounded hover:bg-cardLight dark:hover:bg-cardDark">
                   <FontAwesomeIcon icon={subtab.icon} size="sm" />
                   <p className="text-xs">{subtab.name}</p>
                 </div>
@@ -47,7 +47,9 @@ const LeftNav = (props) => {
   });
 
   const logoutHandler = () => {
-    props.setDUMMY_LOGGED_IN(false);
+    // props.setDUMMY_LOGGED_IN(false);
+    localStorage.removeItem("jwt");
+    props.setIsLoggedIn(false);
   };
 
   const menuOpenHandler = () => {

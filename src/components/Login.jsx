@@ -24,15 +24,48 @@ const Login = (props) => {
 
   // console.log("errors", errors);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  // const flag = props.hasJWT();
+
+  const onSubmit = async (data) => {
+    // console.log(data);
     setIsLoggingIn(true);
-    setTimeout(() => {
-      props.setDUMMY_LOGGED_IN(true);
-    }, 1500);
+    console.log(
+      data,
+      `starting login request with username: ${data.username} and password: ${data.password}`
+    );
+    const response = await fetch(
+      `http://localhost:8000/user/login?username=${data.username}&password=${data.password}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application.json",
+          // "Content-Type": "application/json",
+        },
+        // mode: "no-cors",
+      }
+    );
+
+    if (!response.ok) {
+      console.error("error with fetch!");
+      alert("incorrect login credentials");
+      setIsLoggingIn(false);
+      return;
+    }
+    const dataAPI = await response.json();
+    console.log(dataAPI, "😂");
+    const token = dataAPI.access_token;
+    localStorage.setItem("jwt", token);
+    props.setIsLoggedIn(true);
+    // props.setDUMMY_LOGGED_IN(true);
+
+    // setTimeout(() => {
+    //   props.setDUMMY_LOGGED_IN(true);
+    // }, 1500);
   };
 
-  if (props.DUMMY_LOGGED_IN) {
+  // if (props.DUMMY_LOGGED_IN) {
+  // if (props.loggedInBool) {
+  if (props.isLoggedIn) {
     return <Navigate to="/" />;
   }
 

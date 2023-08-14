@@ -21,6 +21,123 @@ const Ingestion = () => {
     "Study 6",
   ];
 
+  const DUMMY_FILE_EXPLORER = [
+    {
+      name: "participant_data",
+      subFolders: [
+        {
+          name: "SC001",
+          subFolders: [
+            {
+              name: "new_data",
+            },
+            {
+              name: "CASS",
+            },
+            {
+              name: "R2R",
+            },
+          ],
+        },
+        {
+          name: "SC002",
+          subFolders: [
+            {
+              name: "new_data",
+            },
+            {
+              name: "CASS",
+            },
+            {
+              name: "R2R",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "phenotypic_data",
+      subFolders: [
+        {
+          name: "category1phen",
+          subFolders: [
+            {
+              name: "phen1_1",
+            },
+            {
+              name: "phen1_2",
+            },
+          ],
+        },
+        {
+          name: "category2phen",
+          subFolders: [
+            {
+              name: "phen2_1",
+            },
+            {
+              name: "phen2_2",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "temp",
+      subFolders: [
+        {
+          name: "category1temp",
+          subFolders: [
+            {
+              name: "temp1_1",
+            },
+            {
+              name: "temp1_2",
+            },
+          ],
+        },
+        {
+          name: "category2temp",
+          subFolders: [
+            {
+              name: "temp2_1",
+            },
+            {
+              name: "temp2_2",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "misc",
+      subFolders: [
+        {
+          name: "category1",
+          subFolders: [
+            {
+              name: "misc1_1",
+            },
+            {
+              name: "misc1_2",
+            },
+          ],
+        },
+        {
+          name: "category2",
+          subFolders: [
+            {
+              name: "misc2_1",
+            },
+            {
+              name: "misc2_2",
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
   const retrieveAvailableStudies = () => {
     setAvailableStudies(DUMMY_AVAILABLE_STUDIES);
   };
@@ -29,7 +146,7 @@ const Ingestion = () => {
     setTimeout(() => {
       console.log("retrive studies (timeout)");
       retrieveAvailableStudies();
-    }, 2500);
+    }, 500);
   }, []);
 
   if (isAtStart && !availableStudies) {
@@ -52,6 +169,7 @@ const Ingestion = () => {
           setSelectedStudy={setSelectedStudy}
           filePaths={filePaths}
           setFilePaths={setFilePaths}
+          fileExplorer={DUMMY_FILE_EXPLORER}
         />
       </div>
     );

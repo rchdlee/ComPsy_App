@@ -118,6 +118,7 @@ const IngestionStart = (props) => {
   // ];
 
   const DUMMY_AVAILABLE_STUDIES = props.availableStudies;
+  const DUMMY_FILE_EXPLORER = props.fileExplorer;
 
   const DUMMY_MISSING_METADATA = [
     {
@@ -282,6 +283,26 @@ const IngestionStart = (props) => {
     );
   });
 
+  const fileClickHandler = (e) => {
+    const index = e.target.closest("div").id;
+    const subFolders = DUMMY_FILE_EXPLORER[index].subFolders;
+    console.log("file clicked", index, subFolders);
+  };
+
+  const DUMMY_FILE_EXPLORER_JSX = DUMMY_FILE_EXPLORER.map((folder, index) => {
+    return (
+      <div
+        className="flex gap-4 group"
+        id={index}
+        key={index}
+        onClick={fileClickHandler}
+      >
+        <p>o</p>
+        <p className="group-hover:underline">{folder.name}</p>
+      </div>
+    );
+  });
+
   return (
     <div className="mt-16">
       <div className="flex justify-center gap-x-20">
@@ -293,11 +314,21 @@ const IngestionStart = (props) => {
             {DUMMY_AVAILABLE_STUDIES_JSX}
           </div>
         </div>
-        {/*  */}
         <div className="w-60 lg:w-64 xl:w-80 text-blackTextLight dark:text-white">
           <div className="flex items-center gap-3">
+            <h4>Select Directory</h4>
+          </div>
+          <div className="mt-6 h-80 ">
+            {/* <div>path: </div> */}
+            {DUMMY_FILE_EXPLORER_JSX}
+          </div>
+        </div>
+
+        {/* old file upload (new) */}
+
+        {/* <div className="w-60 lg:w-64 xl:w-80 text-blackTextLight dark:text-white">
+          <div className="flex items-center gap-3">
             <h4>Paste File Path(s)</h4>
-            {/* ADD ON HOVER TOOLTOP FOR COPYING FILE PATH */}
             <p className="text-xs w-5 h-5 border-blackTextLight dark:border-cardLight border-2 rounded-full flex justify-center items-center">
               ?
             </p>
@@ -307,13 +338,13 @@ const IngestionStart = (props) => {
             <div className="flex flex-col items-center mb-4">
               <div className={`relative ${hasAddFileError ? "" : "hidden"}`}>
                 <div className="flex flex-col items-center ">
-                  <div className="w-40 h-24 bg-cardDark px-4 py-4 text-white text-sm">
+                  <div className="w-40 h-24 bg-cardLight dark:bg-cardDark px-4 py-4 text-blackTextLight dark:text-white text-sm">
                     <p>Please paste in a file path before adding a new one!</p>
                   </div>
                   <div
                     className="w-0 h-0 mb-2
                   border-l-[14px] border-l-transparent
-                  border-t-[20px] border-t-cardDark
+                  border-t-[20px] border-t-cardLight dark:border-t-cardDark
                   border-r-[14px] border-r-transparent"
                   ></div>
                 </div>
@@ -332,7 +363,7 @@ const IngestionStart = (props) => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
         {/* old file upload */}
         {/* <div className="w-80 text-blackTextLight dark:text-white">
           <h4>Upload File(s)</h4>

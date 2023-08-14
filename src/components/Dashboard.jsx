@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Card from "./Card";
 
 const Dashboard = (props) => {
@@ -12,6 +13,28 @@ const Dashboard = (props) => {
         key={tab.name}
       />
     );
+  });
+
+  useEffect(() => {
+    const testFetch = async () => {
+      // const response = await fetch("http://localhost:8000/people/all_people", {
+      const response = await fetch("http://localhost:8000/user/all_users", {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "ORIGIN",
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+        // withCredentials: true,
+      });
+
+      if (!response.ok) {
+        console.error("error");
+        return;
+      }
+      const data = await response.json();
+      console.log("fetched successfuly!", data);
+    };
+    testFetch();
   });
 
   return (

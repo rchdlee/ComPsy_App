@@ -73,7 +73,7 @@ const Error = (props) => {
           </div>
         </div>
         {/* <Outlet /> */}
-        <div className="text-center ">
+        <div className="text-center text-blackTextLight dark:text-white">
           <h1 className="text-2xl text-center mt-16">There was an error!</h1>
           <p className="mt-4">Page not found</p>
           <p className="mt-4">Please return home</p>
