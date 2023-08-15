@@ -29,6 +29,8 @@ import {
   faFilter,
   faTags,
   faHandsAslInterpreting,
+  faFolder,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faFaceSmile, faFileLines } from "@fortawesome/free-regular-svg-icons";
@@ -62,7 +64,9 @@ function App() {
     faChartPie,
     faScrewdriverWrench,
     faFilter,
-    faTags
+    faTags,
+    faFolder,
+    faChevronRight
   );
   const savedIsDarkMode = JSON.parse(localStorage.getItem("darkMode"));
   const [isDarkMode, setIsDarkMode] = useState(savedIsDarkMode);
@@ -73,14 +77,14 @@ function App() {
   useEffect(() => {
     const hasJWT = () => {
       // let flag = false;
-      const testLoggedInBool = localStorage.getItem("jwt");
-      // console.log(testLoggedInBool, "🤩");
-      if (testLoggedInBool) {
+      const testJWT = localStorage.getItem("jwt");
+      // console.log(testJWT, "🤩");
+      if (testJWT) {
         const getSelf = async () => {
           const response = await fetch("http://localhost:8000/user/get_self", {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${testLoggedInBool}`,
+              Authorization: `Bearer ${testJWT}`,
             },
           });
           if (!response.ok) {
@@ -88,7 +92,8 @@ function App() {
             return;
           }
           const data = await response.json();
-          console.log(data);
+          // console.log(data, "🐱‍🐉");
+          localStorage.setItem("selfID", data.id);
           setIsLoggedIn(true);
         };
         getSelf();

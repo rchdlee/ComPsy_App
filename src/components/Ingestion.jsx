@@ -8,7 +8,9 @@ const Ingestion = () => {
   const [isAtStart, setIsAtStart] = useState(true);
   const [availableStudies, setAvailableStudies] = useState(null);
   const [selectedStudy, setSelectedStudy] = useState(null);
-  const [filePaths, setFilePaths] = useState(null);
+  // const [filePaths, setFilePaths] = useState(null);
+
+  const [filePath, setFilePath] = useState([]);
   const [metadata, setMetadata] = useState(null);
 
   // console.log(metadata, "😋");
@@ -30,6 +32,17 @@ const Ingestion = () => {
           subFolders: [
             {
               name: "new_data",
+              subFolders: [
+                {
+                  name: "1",
+                },
+                {
+                  name: "2",
+                },
+                {
+                  name: "3",
+                },
+              ],
             },
             {
               name: "CASS",
@@ -143,10 +156,54 @@ const Ingestion = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      console.log("retrive studies (timeout)");
-      retrieveAvailableStudies();
-    }, 500);
+    // setTimeout(() => {
+    //   console.log("retrive studies (timeout)");
+    //   retrieveAvailableStudies();
+    // }, 500);
+
+    // should I store ID somewhere earlier from app.jsx component? is fetching here too much?
+    const getSelf = async () => {
+      const response = await fetch("http://localhost:8000/user/get_self", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      });
+      if (!response.ok) {
+        return;
+      }
+      const data = await response.json();
+      return data.id;
+    };
+
+    const fetchStudies = async () => {
+      const response = await fetch("http://localhost:8000/study/all_studies", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      });
+      if (!response.ok) {
+        console.error("problem with fetching studies! ❌");
+      }
+      const data = await response.json();
+      // console.log(data, "👺");
+      return data;
+    };
+
+    const filterStudies = async () => {
+      const selfID = await getSelf();
+      const allStudies = await fetchStudies();
+
+      // console.log(selfID, allStudies, "😶");
+      const availableStudies = allStudies.filter((study) =>
+        study.users.includes(selfID)
+      );
+
+      // console.log(availableStudies, "🥶");
+      setAvailableStudies(availableStudies);
+    };
+    filterStudies();
   }, []);
 
   if (isAtStart && !availableStudies) {
@@ -167,9 +224,11 @@ const Ingestion = () => {
           setMetadata={setMetadata}
           selectedStudy={selectedStudy}
           setSelectedStudy={setSelectedStudy}
-          filePaths={filePaths}
-          setFilePaths={setFilePaths}
+          // filePaths={filePaths}
+          // setFilePaths={setFilePaths}
           fileExplorer={DUMMY_FILE_EXPLORER}
+          filePath={filePath}
+          setFilePath={setFilePath}
         />
       </div>
     );

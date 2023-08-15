@@ -1,124 +1,14 @@
 import { useState, useCallback, useRef } from "react";
-import { useDropzone } from "react-dropzone";
-import { useForm } from "react-hook-form";
+
 import IngestionStartError from "./IngestionStartError";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const IngestionStart = (props) => {
-  // const [selectedStudy, setSelectedStudy] = useState(null);
-  // const [uploadedFiles, setUploadedFiles] = useState([]);
-
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const [hasAddFileError, setHasAddFileError] = useState(false);
-
-  const filePaths = props.filePaths;
-  const defaultValues = {};
-  const filePathsLength = filePaths?.length;
-  const registerInputsArray = [];
-
-  filePaths?.forEach((path, index) => (defaultValues[index] = path));
-
-  for (let i = 0; i < filePathsLength; i++) {
-    registerInputsArray.push(i.toString());
-  }
-
-  const initialInputs = filePathsLength ? registerInputsArray : ["0"];
-
-  const { register, watch, handleSubmit, unregister } = useForm({
-    defaultValues: defaultValues,
-  });
-  const [inputs, setInputs] = useState(initialInputs);
-
-  const watchAllFields = watch();
-  const inputValues = Object.values(watchAllFields);
-
-  const addFileInputHandler = () => {
-    const length = inputs.length;
-    const newNumber = +inputs[length - 1] + 1;
-
-    // for preventing adding a new input if the last one is empty
-    if (!inputValues[length - 1]) {
-      // NEED ERROR POPUP
-      // console.log("please add a file path before adding a new one");
-      setHasAddFileError(true);
-      return;
-    }
-    setHasAddFileError(false);
-    setInputs((prevState) => [...prevState, newNumber.toString()]);
-  };
-
-  const inputDeleteHandler = (e) => {
-    const id = e.target.id;
-    unregister(id);
-    setInputs((prevState) => prevState.filter((inputID) => inputID !== id));
-  };
-
-  const fileInputs = inputs.map((input, index) => {
-    return (
-      <div className="flex items-center gap-4 first:mt-0 mt-2" key={input}>
-        <label htmlFor="">{index + 1}.</label>
-        <input
-          {...register(input)}
-          className={`bg-white dark:bg-backgroundDark h-10 w-80 px-3 border-2 border-cardDark dark:border-white rounded`}
-          autoComplete="off"
-          type="text"
-        />
-        {/* {index !== 0 && ( */}
-        <button
-          onClick={inputDeleteHandler}
-          id={input}
-          className={`${index === 0 && "opacity-0"}`}
-        >
-          X
-        </button>
-        {/* )} */}
-      </div>
-    );
-  });
-
-  // for file upload
-
-  // const onDrop = useCallback((acceptedFiles) => {
-  //   // Do something with the files
-  //   console.log(acceptedFiles);
-
-  //   acceptedFiles.forEach((file) => {
-  //     const reader = new FileReader();
-  //     console.log(reader);
-
-  //     reader.onabort = () => console.log("file reading was aborted");
-  //     reader.onerror = () => console.log("file reading has failed");
-  //     reader.onload = () => {
-  //       // Do whatever you want with the file contents
-  //       const binaryStr = reader.result;
-  //       console.log(binaryStr);
-  //     };
-  //     reader.readAsArrayBuffer(file);
-  //   });
-  // }, []);
-  // const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-  //   useDropzone({ onDrop });
-
-  // const files = acceptedFiles.map((file) => (
-  //   <li key={file.path}>
-  //     {file.path} - {file.size} bytes
-  //   </li>
-  // ));
-
-  //
-
-  // const DUMMY_AVAILABLE_STUDIES = [
-  //   "Study 1",
-  //   "Study 2",
-  //   "Social Coordination",
-  //   "Study 4",
-  //   "Study 5",
-  //   "Study 6",
-  // ];
-
   const DUMMY_AVAILABLE_STUDIES = props.availableStudies;
-  const DUMMY_FILE_EXPLORER = props.fileExplorer;
+  const DUMMY_DIRECTORY_FILES = props.fileExplorer;
 
   const DUMMY_MISSING_METADATA = [
     {
@@ -219,89 +109,160 @@ const IngestionStart = (props) => {
     },
   ];
 
+  const continueHandler = () => {
+    // props.setIsAtStart(false);
+    console.log("clicked continue!");
+    // setTimeout(() => {
+    //   props.setMetadata(DUMMY_MISSING_METADATA);
+    // }, 500);
+  };
+
   const studyClickHandler = (e) => {
     // console.log(e.target.innerHTML);
-    props.setSelectedStudy(e.target.innerHTML);
+    const studyName = e.target.innerHTML;
+    const selectedStudyData = props.availableStudies.filter(
+      (study) => study.name === studyName
+    )[0];
+
+    console.log(selectedStudyData, "😎");
+
+    props.setSelectedStudy(selectedStudyData);
   };
 
-  // const continueHandler = () => {
-  //   props.setIsAtStart(false);
-  //   console.log(props.selectedStudy, watchAllFields);
-  //   setTimeout(() => {
-  //     props.setMetadata(DUMMY_MISSING_METADATA);
-  //   }, 500);
+  // const createContinueError = (message) => {
+  //   setHasError(true);
+  //   setErrorMessage(message);
   // };
-
-  const createContinueError = (message) => {
-    setHasError(true);
-    setErrorMessage(message);
-  };
-
-  const onSubmit = (data) => {
-    setHasError(false);
-    if (!props.selectedStudy) {
-      if (!Object.values(watchAllFields)[0]) {
-        createContinueError("Please select a study & add at least 1 file!");
-        return;
-      }
-      createContinueError("Please select a study!");
-      return;
-    }
-    if (!Object.values(watchAllFields)[0]) {
-      createContinueError("Please add at least 1 file!");
-      return;
-    }
-
-    props.setIsAtStart(false);
-    const filePaths = Object.values(data).filter((path) => path !== "");
-    props.setFilePaths(filePaths);
-    console.log(props.selectedStudy, filePaths);
-    setTimeout(() => {
-      props.setMetadata(DUMMY_MISSING_METADATA);
-    }, 500);
-  };
-
-  // const handleFileInput = () => {};
-  const addFileErrorCloseHandler = () => {
-    setHasAddFileError(false);
-  };
 
   const DUMMY_AVAILABLE_STUDIES_JSX = DUMMY_AVAILABLE_STUDIES.map((study) => {
     const selected =
-      props.selectedStudy === study
+      props.selectedStudy?.name === study.name
         ? "bg-lilacBlue"
         : "text-blackTextLight dark:text-white hover:bg-cardLight dark:hover:bg-cardDark";
 
     return (
       <div
-        key={study}
+        key={study.name}
         onClick={studyClickHandler}
         className={`border-2 border-blackTextLight dark:border-white rounded h-14 flex items-center mt-2 first:mt-0 pl-4 mr-1 ${selected}`}
       >
-        {study}
+        {study.name}
       </div>
     );
   });
+
+  const [furthestDirectoryItem, setFurthestDirectoryItem] = useState(
+    // need to change when making API request per study
+    DUMMY_DIRECTORY_FILES
+  );
 
   const fileClickHandler = (e) => {
     const index = e.target.closest("div").id;
-    const subFolders = DUMMY_FILE_EXPLORER[index].subFolders;
-    console.log("file clicked", index, subFolders);
+    const subFolders = furthestDirectoryItem[index].subFolders;
+    const pathDepth = props.filePath.length;
+
+    const selectedItem = furthestDirectoryItem[index];
+
+    console.log(
+      "file clicked",
+      "depth",
+      pathDepth,
+      "index",
+      index,
+      selectedItem,
+      selectedItem.name,
+      subFolders
+    );
+
+    props.setFilePath((prevState) => [...prevState, selectedItem.name]);
+    setFurthestDirectoryItem(subFolders);
   };
 
-  const DUMMY_FILE_EXPLORER_JSX = DUMMY_FILE_EXPLORER.map((folder, index) => {
+  const filePathClickHandler = (e) => {
+    if (+e.target.id + 1 === pathDepth) {
+      console.log("already on this folder");
+      return;
+    }
+    console.log(pathDepth, e.target.id, e.target.innerHTML, props.filePath);
+    // const newFoldersToDisplay = DUMMY_AVAILABLE_STUDIES
+    let test = DUMMY_DIRECTORY_FILES;
+    for (let i = 0; i < +e.target.id + 1; i++) {
+      console.log(`i = ${i}`);
+      test = test.filter((item) => item.name === props.filePath[i])[0]
+        .subFolders;
+      console.log(test);
+    }
+    console.log(test, "🤖");
+    props.setFilePath((prevState) => prevState.slice(0, +e.target.id + 1));
+    setFurthestDirectoryItem(test);
+  };
+
+  const rootPathClickHandler = () => {
+    setFurthestDirectoryItem(DUMMY_DIRECTORY_FILES);
+    props.setFilePath([]);
+  };
+
+  // const DUMMY_FILE_PATH_JSX = filePath;
+  const initial_DUMMY_FILE_PATH_JSX = props.selectedStudy ? (
+    <p className="hover:underline" onClick={rootPathClickHandler}>
+      {props.selectedStudy.server_path}
+    </p>
+  ) : (
+    <p>Please select a study to view its child directories</p>
+  );
+
+  const DUMMY_FILE_PATH = props.filePath.map((pathName, index) => {
     return (
-      <div
-        className="flex gap-4 group"
-        id={index}
-        key={index}
-        onClick={fileClickHandler}
-      >
-        <p>o</p>
-        <p className="group-hover:underline">{folder.name}</p>
+      <div className="flex items-center gap-3">
+        <p
+          key={index}
+          id={index}
+          className="hover:underline"
+          onClick={filePathClickHandler}
+        >
+          {pathName}
+        </p>
+        <FontAwesomeIcon icon="chevron-right" />
       </div>
     );
   });
+
+  const pathDepth = props.filePath.length;
+  console.log(pathDepth, props.filePath, "💩");
+
+  // const subFolderTest = props.filePath.reduce(
+  //   (accumulator, currentValue) =>
+  //     accumulator.filter((file) => file.name === currentValue),
+  //   DUMMY_AVAILABLE_STUDIES_JSX
+  // );
+  // let subFolderTest = DUMMY_DIRECTORY_FILES;
+  // console.log("INITIAL", subFolderTest);
+  // for (let i = 0; i <= pathDepth; i++) {
+  //   const currentPathToBeSearchedFor = props.filePath[i];
+  //   console.log(currentPathToBeSearchedFor, i, "🐺", subFolderTest);
+  //   const testIndex = subFolderTest.findIndex(
+  //     (file) => file.name === currentPathToBeSearchedFor
+  //   );
+  //   console.log("testindex", testIndex);
+  //   subFolderTest = subFolderTest[testIndex];
+  // }
+  // console.log(subFolderTest, "🐠");
+
+  const DUMMY_FILE_EXPLORER_JSX = props.selectedStudy
+    ? furthestDirectoryItem.map((folder, index) => {
+        return (
+          <div
+            className="flex gap-3 items-center group"
+            id={index}
+            key={index}
+            onClick={fileClickHandler}
+          >
+            <FontAwesomeIcon icon="fa-folder" />
+            <p className="group-hover:underline">{folder.name}</p>
+          </div>
+        );
+      })
+    : "";
 
   return (
     <div className="mt-16">
@@ -316,78 +277,21 @@ const IngestionStart = (props) => {
         </div>
         <div className="w-60 lg:w-64 xl:w-80 text-blackTextLight dark:text-white">
           <div className="flex items-center gap-3">
-            <h4>Select Directory</h4>
+            <h4 className="text-lg">Select Directory</h4>
           </div>
           <div className="mt-6 h-80 ">
-            {/* <div>path: </div> */}
-            {DUMMY_FILE_EXPLORER_JSX}
+            <div className="border-b-2 dark:border-white pb-3 flex items-center gap-4 flex-wrap text-sm">
+              <div>{initial_DUMMY_FILE_PATH_JSX}</div>
+              {props.selectedStudy ? (
+                <FontAwesomeIcon icon="chevron-right" />
+              ) : (
+                ""
+              )}
+              {DUMMY_FILE_PATH}
+            </div>
+            <div className="mt-2 pl-3">{DUMMY_FILE_EXPLORER_JSX}</div>
           </div>
         </div>
-
-        {/* old file upload (new) */}
-
-        {/* <div className="w-60 lg:w-64 xl:w-80 text-blackTextLight dark:text-white">
-          <div className="flex items-center gap-3">
-            <h4>Paste File Path(s)</h4>
-            <p className="text-xs w-5 h-5 border-blackTextLight dark:border-cardLight border-2 rounded-full flex justify-center items-center">
-              ?
-            </p>
-          </div>
-          <div className="mt-6 h-80 flex flex-col justify-between">
-            <div className="flex flex-col first:mt-0 mt-4">{fileInputs}</div>
-            <div className="flex flex-col items-center mb-4">
-              <div className={`relative ${hasAddFileError ? "" : "hidden"}`}>
-                <div className="flex flex-col items-center ">
-                  <div className="w-40 h-24 bg-cardLight dark:bg-cardDark px-4 py-4 text-blackTextLight dark:text-white text-sm">
-                    <p>Please paste in a file path before adding a new one!</p>
-                  </div>
-                  <div
-                    className="w-0 h-0 mb-2
-                  border-l-[14px] border-l-transparent
-                  border-t-[20px] border-t-cardLight dark:border-t-cardDark
-                  border-r-[14px] border-r-transparent"
-                  ></div>
-                </div>
-                <button
-                  onClick={addFileErrorCloseHandler}
-                  className="text-sm absolute top-[-12px] right-[-8px] bg-salmonRed h-5 w-5 rounded-full flex justify-center items-center"
-                >
-                  X
-                </button>
-              </div>
-              <button
-                onClick={addFileInputHandler}
-                className="relative hover:bg-lilacBlue hover:text-blackTextLight p-2 border-2 border-cardDark dark:border-white rounded"
-              >
-                + Add another file
-              </button>
-            </div>
-          </div>
-        </div> */}
-        {/* old file upload */}
-        {/* <div className="w-80 text-blackTextLight dark:text-white">
-          <h4>Upload File(s)</h4>
-          <div className="mt-8 border-2">
-            <div {...getRootProps()} className="h-64">
-              <input {...getInputProps()} onChange={handleFileInput} />
-              {isDragActive ? (
-                <p>Drop the files here ...</p>
-              ) : (
-                <div>
-                  <p>Drag 'n' drop some files here, or click to select files</p>
-                  <button className="bg-lilacBlue w-24 h-12 rounded text-blackTextLight font-semibold">
-                    Browse
-                  </button>
-                </div>
-              )}
-              <aside>
-                <h4>Files</h4>
-                <ul>{files}</ul>
-              </aside>
-              <a href="C:\Users\richa\OneDrive\Desktop\fun\favoritegames\maggie.jpg"></a>
-            </div>
-          </div>
-        </div> */}
       </div>
       <div className="flex items-center justify-center mt-16 lg:mt-32 2xl:mt-48 relative">
         <div className="flex gap-2">
@@ -396,8 +300,8 @@ const IngestionStart = (props) => {
         </div>
         <div
           className="text-blackTextLight dark:text-white absolute right-20 md:right-40 xl:right-60 hover:underline underline-offset-4"
-          // onClick={continueHandler}
-          onClick={handleSubmit(onSubmit)}
+          onClick={continueHandler}
+          // onClick={handleSubmit(onSubmit)}
         >
           <p>Continue</p>
         </div>

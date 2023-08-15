@@ -15,27 +15,27 @@ const Dashboard = (props) => {
     );
   });
 
-  useEffect(() => {
-    const testFetch = async () => {
-      // const response = await fetch("http://localhost:8000/people/all_people", {
-      const response = await fetch("http://localhost:8000/user/all_users", {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "ORIGIN",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-        // withCredentials: true,
-      });
+  // useEffect(() => {
+  //   const testFetch = async () => {
+  //     // const response = await fetch("http://localhost:8000/people/all_people", {
+  //     const response = await fetch("http://localhost:8000/user/all_users", {
+  //       method: "GET",
+  //       headers: {
+  //         "Access-Control-Allow-Origin": "ORIGIN",
+  //         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+  //       },
+  //       // withCredentials: true,
+  //     });
 
-      if (!response.ok) {
-        console.error("error");
-        return;
-      }
-      const data = await response.json();
-      console.log("fetched successfuly!", data);
-    };
-    testFetch();
-  });
+  //     if (!response.ok) {
+  //       console.error("error");
+  //       return;
+  //     }
+  //     const data = await response.json();
+  //     console.log("fetched successfuly!", data);
+  //   };
+  //   testFetch();
+  // });
 
   return (
     <div className="md:w-[650px] xl:w-[900px] 2xl:w-[1050px] mx-auto mt-6 lg:mt-12">
