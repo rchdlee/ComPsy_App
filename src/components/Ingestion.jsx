@@ -8,6 +8,7 @@ const Ingestion = () => {
   const [isAtStart, setIsAtStart] = useState(true);
   const [availableStudies, setAvailableStudies] = useState(null);
   const [selectedStudy, setSelectedStudy] = useState(null);
+
   // const [filePaths, setFilePaths] = useState(null);
 
   const [filePath, setFilePath] = useState([]);
@@ -23,46 +24,72 @@ const Ingestion = () => {
     "Study 6",
   ];
 
-  const DUMMY_FILE_EXPLORER = [
+  const DUMMY_FILE_EXPLORER_firststudy = [
     {
-      name: "participant_data",
+      name: "participant_data_firststudy",
+      type: "folder",
       subFolders: [
         {
           name: "SC001",
+          type: "folder",
           subFolders: [
             {
               name: "new_data",
+              type: "folder",
               subFolders: [
                 {
-                  name: "1",
+                  name: "1.1",
+                  type: "video",
                 },
                 {
-                  name: "2",
+                  name: "2.1",
+                  type: "video",
                 },
                 {
-                  name: "3",
+                  name: "3.1",
+                  type: "video",
                 },
               ],
             },
             {
               name: "CASS",
+              type: "folder",
             },
             {
               name: "R2R",
+              type: "folder",
             },
           ],
         },
         {
           name: "SC002",
+          type: "folder",
           subFolders: [
             {
               name: "new_data",
+              type: "folder",
+              subFolders: [
+                {
+                  name: "1.2",
+                  type: "video",
+                },
+                {
+                  name: "2.2",
+                  type: "video",
+                },
+                {
+                  name: "3.2",
+                  type: "video",
+                },
+              ],
             },
             {
               name: "CASS",
+              type: "folder",
             },
             {
               name: "R2R",
+              type: "folder",
             },
           ],
         },
@@ -70,26 +97,33 @@ const Ingestion = () => {
     },
     {
       name: "phenotypic_data",
+      type: "folder",
       subFolders: [
         {
           name: "category1phen",
+          type: "folder",
           subFolders: [
             {
               name: "phen1_1",
+              type: "folder",
             },
             {
               name: "phen1_2",
+              type: "folder",
             },
           ],
         },
         {
           name: "category2phen",
+          type: "folder",
           subFolders: [
             {
               name: "phen2_1",
+              type: "folder",
             },
             {
               name: "phen2_2",
+              type: "folder",
             },
           ],
         },
@@ -97,26 +131,33 @@ const Ingestion = () => {
     },
     {
       name: "temp",
+      type: "folder",
       subFolders: [
         {
           name: "category1temp",
+          type: "folder",
           subFolders: [
             {
               name: "temp1_1",
+              type: "folder",
             },
             {
               name: "temp1_2",
+              type: "folder",
             },
           ],
         },
         {
           name: "category2temp",
+          type: "folder",
           subFolders: [
             {
               name: "temp2_1",
+              type: "folder",
             },
             {
               name: "temp2_2",
+              type: "folder",
             },
           ],
         },
@@ -124,32 +165,219 @@ const Ingestion = () => {
     },
     {
       name: "misc",
+      type: "folder",
       subFolders: [
         {
           name: "category1",
+          type: "folder",
           subFolders: [
             {
               name: "misc1_1",
+              type: "folder",
             },
             {
               name: "misc1_2",
+              type: "folder",
             },
           ],
         },
         {
           name: "category2",
+          type: "folder",
           subFolders: [
             {
               name: "misc2_1",
+              type: "folder",
             },
             {
               name: "misc2_2",
+              type: "folder",
             },
           ],
         },
       ],
     },
   ];
+  const DUMMY_FILE_EXPLORER_secondstudy = [
+    {
+      name: "participant_data_secondstudy",
+      type: "folder",
+      subFolders: [
+        {
+          name: "SC001",
+          type: "folder",
+          subFolders: [
+            {
+              name: "new_datatrsa",
+              type: "folder",
+              subFolders: [
+                {
+                  name: "1.1tsra",
+                  type: "video",
+                },
+                {
+                  name: "2.1",
+                  type: "video",
+                },
+                {
+                  name: "3.1",
+                  type: "video",
+                },
+              ],
+            },
+            {
+              name: "CASStrsa",
+              type: "folder",
+            },
+            {
+              name: "R2R",
+              type: "folder",
+            },
+          ],
+        },
+        {
+          name: "SC002trsa",
+          type: "folder",
+          subFolders: [
+            {
+              name: "new_data",
+              type: "folder",
+              subFolders: [
+                {
+                  name: "1.2",
+                  type: "video",
+                },
+                {
+                  name: "2.2",
+                  type: "video",
+                },
+                {
+                  name: "3.2",
+                  type: "video",
+                },
+              ],
+            },
+            {
+              name: "CASStsra",
+              type: "folder",
+            },
+            {
+              name: "R2R",
+              type: "folder",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "phenotypic_datatsra",
+      type: "folder",
+      subFolders: [
+        {
+          name: "category1phen",
+          type: "folder",
+          subFolders: [
+            {
+              name: "phen1_1",
+              type: "folder",
+            },
+            {
+              name: "phen1_2",
+              type: "folder",
+            },
+          ],
+        },
+        {
+          name: "category2phentrsa",
+          type: "folder",
+          subFolders: [
+            {
+              name: "phen2_1",
+              type: "folder",
+            },
+            {
+              name: "phen2_2",
+              type: "folder",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "temp",
+      type: "folder",
+      subFolders: [
+        {
+          name: "category1temp",
+          type: "folder",
+          subFolders: [
+            {
+              name: "temp1_1",
+              type: "folder",
+            },
+            {
+              name: "temp1_2",
+              type: "folder",
+            },
+          ],
+        },
+        {
+          name: "category2temp",
+          type: "folder",
+          subFolders: [
+            {
+              name: "temp2_1",
+              type: "folder",
+            },
+            {
+              name: "temp2_2",
+              type: "folder",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "misc",
+      type: "folder",
+      subFolders: [
+        {
+          name: "category1",
+          type: "folder",
+          subFolders: [
+            {
+              name: "misc1_1",
+              type: "folder",
+            },
+            {
+              name: "misc1_2",
+              type: "folder",
+            },
+          ],
+        },
+        {
+          name: "category2",
+          type: "folder",
+          subFolders: [
+            {
+              name: "misc2_1",
+              type: "folder",
+            },
+            {
+              name: "misc2_2",
+              type: "folder",
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  // FIX FOR API
+  const DUMMY_FILE_EXPLORER_DISPLAY =
+    selectedStudy?.name === "first study lalala"
+      ? DUMMY_FILE_EXPLORER_firststudy
+      : DUMMY_FILE_EXPLORER_secondstudy;
 
   const retrieveAvailableStudies = () => {
     setAvailableStudies(DUMMY_AVAILABLE_STUDIES);
@@ -226,7 +454,8 @@ const Ingestion = () => {
           setSelectedStudy={setSelectedStudy}
           // filePaths={filePaths}
           // setFilePaths={setFilePaths}
-          fileExplorer={DUMMY_FILE_EXPLORER}
+          fileExplorer={DUMMY_FILE_EXPLORER_firststudy}
+          // fileExplorer={DUMMY_FILE_EXPLORER_DISPLAY}
           filePath={filePath}
           setFilePath={setFilePath}
         />
