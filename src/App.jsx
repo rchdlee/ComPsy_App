@@ -31,9 +31,15 @@ import {
   faHandsAslInterpreting,
   faFolder,
   faChevronRight,
+  faTriangleExclamation,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { faFaceSmile, faFileLines } from "@fortawesome/free-regular-svg-icons";
+import {
+  faFaceSmile,
+  faFileLines,
+  faCircleXmark,
+} from "@fortawesome/free-regular-svg-icons";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -66,12 +72,16 @@ function App() {
     faFilter,
     faTags,
     faFolder,
-    faChevronRight
+    faChevronRight,
+    faCircleXmark,
+    faTriangleExclamation,
+    faXmark
   );
   const savedIsDarkMode = JSON.parse(localStorage.getItem("darkMode"));
   const [isDarkMode, setIsDarkMode] = useState(savedIsDarkMode);
   // const [DUMMY_LOGGED_IN, setDUMMY_LOGGED_IN] = useState(false);
 
+  const [name, setName] = useState();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -92,7 +102,9 @@ function App() {
             return;
           }
           const data = await response.json();
-          // console.log(data, "🐱‍🐉");
+          console.log(data, "🐱‍🐉");
+          const name = `${data.first_name} ${data.last_name}`;
+          setName(name);
           localStorage.setItem("selfID", data.id);
           setIsLoggedIn(true);
         };
@@ -103,24 +115,14 @@ function App() {
     };
     hasJWT();
   });
-  // const loggedInBool = hasJWT();
-  // useEffect(() => {
-  //   const getSelf = async () => {
-  //     const response = await fetch("http://localhost:8000/user/get_self", {
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `Bearer ${testLoggedInBool}`,
-  //       },
-  //     });
-  //     if (!response.ok) {
-  //       setDUMMY_LOGGED_IN(false);
-  //       return;
-  //     }
-  //     const data = await response.json();
-  //     console.log(data);
-  //   };
-  //   getSelf();
-  // });
+
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const throwNewErrorModal = (message) => {
+    setHasError(true);
+    setErrorMessage(message);
+  };
 
   const DUMMY_AVAILABLE_TABS = [
     {
@@ -208,6 +210,10 @@ function App() {
           // loggedInBool={loggedInBool}
           isLoggedIn={isLoggedIn}
           setIsLoggedIn={setIsLoggedIn}
+          name={name}
+          hasError={hasError}
+          setHasError={setHasError}
+          errorMessage={errorMessage}
         />
       ),
       errorElement: (
@@ -230,7 +236,12 @@ function App() {
         },
         {
           path: "data-management/ingestion",
-          element: <Ingestion />,
+          element: (
+            <Ingestion
+              throwNewErrorModal={throwNewErrorModal}
+              setHasError={setHasError}
+            />
+          ),
         },
       ],
     },

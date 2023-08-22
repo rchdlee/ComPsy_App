@@ -190,8 +190,9 @@ const IngestionMetadata = (props) => {
   });
 
   const backButtonHandler = () => {
-    props.setIsAtStart(true);
+    // props.setIsAtStart(true);
     props.setMetadata(null);
+    props.setHasSelectedVideos(false);
   };
 
   // const testIDs = ["11", "222"];
@@ -213,7 +214,7 @@ const IngestionMetadata = (props) => {
             </div>
             <GreenCheck />
           </div> */}
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
               <button
                 className="px-8 py-4 border-2 border-black mt-16 xl:mt-8 bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
                 disabled={!hasFilledEverything}
@@ -221,7 +222,7 @@ const IngestionMetadata = (props) => {
               >
                 Submit (test)
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="w-px bg-blackTextLight dark:bg-white opacity-50"></div>
@@ -233,7 +234,7 @@ const IngestionMetadata = (props) => {
           {/* <FormProvider {...methods}> */}
           <form
             // onSubmit={methods.handleSubmit(onSubmit)}
-            onSubmit={handleSubmit(onSubmit)}
+            // onSubmit={handleSubmit(onSubmit)}
             className="text-blackTextLight dark:text-white"
           >
             {formsTest}
@@ -248,19 +249,35 @@ const IngestionMetadata = (props) => {
           {/* </FormProvider> */}
         </div>
       </div>
-      <div className="flex items-center justify-center mt-16 lg:mt-32 2xl:mt-48 relative md:w-[650px] xl:w-[900px] 2xl:w-[1050px] mx-auto">
-        <div className="flex gap-2">
-          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white rounded-full"></div>
-          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white bg-blackTextLight dark:bg-white rounded-full"></div>
-        </div>
-
+      <div className="flex items-center justify-center mt-16 lg:mt-32 2xl:mt-32 relative mx-auto">
+        {/* <div className="flex items-center justify-center mt-16 lg:mt-32 2xl:mt-32 relative md:w-[650px] xl:w-[900px] 2xl:w-[1050px] mx-auto"> */}
         <button
           onClick={backButtonHandler}
           // className="mt-16 lg:mt-32 2xl:mt-48"
-          className="text-blackTextLight dark:text-white absolute left-5 xl:left-12 2xl:left-24 hover:underline underline-offset-4"
+          // className="text-blackTextLight dark:text-white hover:underline underline-offset-4"
+          className="text-blackTextLight dark:text-white absolute left-20 md:left-40 xl:left-60 hover:underline underline-offset-4"
+
+          // className="text-blackTextLight dark:text-white absolute left-5 xl:left-12 2xl:left-24 hover:underline underline-offset-4"
         >
           Back
         </button>
+        <div className="flex gap-2">
+          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white rounded-full"></div>
+          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white rounded-full"></div>
+          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white bg-blackTextLight dark:bg-white rounded-full"></div>
+        </div>
+        <div
+          // className="flex justify-center"
+          className="text-blackTextLight dark:text-white absolute right-16 md:right-36 xl:right-56 hover:underline underline-offset-4"
+        >
+          <button
+            className="px-8 py-4 border-2 border-black  bg-lilacBlue disabled:opacity-50 disabled:cursor-not-allowed text-blackTextLight "
+            disabled={!hasFilledEverything}
+            onClick={handleSubmit(onSubmit)}
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,13 +1,19 @@
 import { Outlet, Navigate } from "react-router-dom";
 import LeftNav from "./LeftNav";
 import TopBar from "./TopBar";
+import ErrorModal from "./ErrorModal";
+import { useEffect } from "react";
 
 const RootLayout = (props) => {
   // const flag = props.hasJWT();
   // console.log(flag, "👽");
-
   return (
     <div className="w-screen h-full sm:h-screen bg-backgroundLight dark:bg-backgroundDark flex flex-col md:flex-row  z-0">
+      <ErrorModal
+        hasError={props.hasError}
+        setHasError={props.setHasError}
+        errorMessage={props.errorMessage}
+      />
       <LeftNav
         tabs={props.tabs}
         setDUMMY_LOGGED_IN={props.setDUMMY_LOGGED_IN}
@@ -17,6 +23,7 @@ const RootLayout = (props) => {
         <TopBar
           isDarkMode={props.isDarkMode}
           setIsDarkMode={props.setIsDarkMode}
+          name={props.name}
         />
         {/* <Outlet /> */}
         {/* {props.DUMMY_LOGGED_IN ? <Outlet /> : <Navigate to="/login" />} */}

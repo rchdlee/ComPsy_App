@@ -70,7 +70,7 @@ const TopBar = (props) => {
             <FontAwesomeIcon icon={["far", "face-smile"]} className="h-5 " />
           </div>
           <p className="text-darkTextLight dark:text-white text-sm xl:text-base">
-            Birkan Tunc
+            {props.name}
           </p>
         </div>
         {/* <div> */}

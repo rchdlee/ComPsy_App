@@ -1,17 +1,24 @@
 import IngestionStart from "./IngestionStart";
+import IngestionSelect from "./IngestionSelect";
 import IngestionMetadata from "./IngestionMetadata";
 import LoadScreen from "./LoadScreen";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const Ingestion = () => {
+const Ingestion = (props) => {
+  // STEP 1
   const [isAtStart, setIsAtStart] = useState(true);
   const [availableStudies, setAvailableStudies] = useState(null);
   const [selectedStudy, setSelectedStudy] = useState(null);
-
-  // const [filePaths, setFilePaths] = useState(null);
-
   const [filePath, setFilePath] = useState([]);
+  const [selectedDirectories, setSelectedDirectories] = useState([]);
+
+  // STEP 2
+  const [videoListFull, setVideoListFull] = useState(null);
+  const [videoListSelected, setVideoListSelected] = useState([]);
+  const [hasSelectedVideos, setHasSelectedVideos] = useState(false);
+
+  // STEP 3
   const [metadata, setMetadata] = useState(null);
 
   // console.log(metadata, "😋");
@@ -27,69 +34,59 @@ const Ingestion = () => {
   const DUMMY_FILE_EXPLORER_firststudy = [
     {
       name: "participant_data_firststudy",
-      type: "folder",
+
       subFolders: [
         {
           name: "SC001",
-          type: "folder",
+
           subFolders: [
             {
               name: "new_data",
-              type: "folder",
+
               subFolders: [
                 {
                   name: "1.1",
-                  type: "video",
                 },
                 {
                   name: "2.1",
-                  type: "video",
                 },
                 {
                   name: "3.1",
-                  type: "video",
                 },
               ],
             },
             {
               name: "CASS",
-              type: "folder",
             },
             {
               name: "R2R",
-              type: "folder",
             },
           ],
         },
         {
           name: "SC002",
-          type: "folder",
+
           subFolders: [
             {
               name: "new_data",
-              type: "folder",
+
               subFolders: [
                 {
                   name: "1.2",
-                  type: "video",
                 },
                 {
                   name: "2.2",
-                  type: "video",
                 },
                 {
                   name: "3.2",
-                  type: "video",
                 },
               ],
             },
             {
               name: "CASS",
-              type: "folder",
             },
             {
               name: "R2R",
-              type: "folder",
             },
           ],
         },
@@ -97,33 +94,29 @@ const Ingestion = () => {
     },
     {
       name: "phenotypic_data",
-      type: "folder",
+
       subFolders: [
         {
           name: "category1phen",
-          type: "folder",
+
           subFolders: [
             {
               name: "phen1_1",
-              type: "folder",
             },
             {
               name: "phen1_2",
-              type: "folder",
             },
           ],
         },
         {
           name: "category2phen",
-          type: "folder",
+
           subFolders: [
             {
               name: "phen2_1",
-              type: "folder",
             },
             {
               name: "phen2_2",
-              type: "folder",
             },
           ],
         },
@@ -131,33 +124,29 @@ const Ingestion = () => {
     },
     {
       name: "temp",
-      type: "folder",
+
       subFolders: [
         {
           name: "category1temp",
-          type: "folder",
+
           subFolders: [
             {
               name: "temp1_1",
-              type: "folder",
             },
             {
               name: "temp1_2",
-              type: "folder",
             },
           ],
         },
         {
           name: "category2temp",
-          type: "folder",
+
           subFolders: [
             {
               name: "temp2_1",
-              type: "folder",
             },
             {
               name: "temp2_2",
-              type: "folder",
             },
           ],
         },
@@ -165,33 +154,29 @@ const Ingestion = () => {
     },
     {
       name: "misc",
-      type: "folder",
+
       subFolders: [
         {
           name: "category1",
-          type: "folder",
+
           subFolders: [
             {
               name: "misc1_1",
-              type: "folder",
             },
             {
               name: "misc1_2",
-              type: "folder",
             },
           ],
         },
         {
           name: "category2",
-          type: "folder",
+
           subFolders: [
             {
               name: "misc2_1",
-              type: "folder",
             },
             {
               name: "misc2_2",
-              type: "folder",
             },
           ],
         },
@@ -201,69 +186,59 @@ const Ingestion = () => {
   const DUMMY_FILE_EXPLORER_secondstudy = [
     {
       name: "participant_data_secondstudy",
-      type: "folder",
+
       subFolders: [
         {
           name: "SC001",
-          type: "folder",
+
           subFolders: [
             {
               name: "new_datatrsa",
-              type: "folder",
+
               subFolders: [
                 {
                   name: "1.1tsra",
-                  type: "video",
                 },
                 {
                   name: "2.1",
-                  type: "video",
                 },
                 {
                   name: "3.1",
-                  type: "video",
                 },
               ],
             },
             {
               name: "CASStrsa",
-              type: "folder",
             },
             {
               name: "R2R",
-              type: "folder",
             },
           ],
         },
         {
           name: "SC002trsa",
-          type: "folder",
+
           subFolders: [
             {
               name: "new_data",
-              type: "folder",
+
               subFolders: [
                 {
                   name: "1.2",
-                  type: "video",
                 },
                 {
                   name: "2.2",
-                  type: "video",
                 },
                 {
                   name: "3.2",
-                  type: "video",
                 },
               ],
             },
             {
               name: "CASStsra",
-              type: "folder",
             },
             {
               name: "R2R",
-              type: "folder",
             },
           ],
         },
@@ -271,33 +246,29 @@ const Ingestion = () => {
     },
     {
       name: "phenotypic_datatsra",
-      type: "folder",
+
       subFolders: [
         {
           name: "category1phen",
-          type: "folder",
+
           subFolders: [
             {
               name: "phen1_1",
-              type: "folder",
             },
             {
               name: "phen1_2",
-              type: "folder",
             },
           ],
         },
         {
           name: "category2phentrsa",
-          type: "folder",
+
           subFolders: [
             {
               name: "phen2_1",
-              type: "folder",
             },
             {
               name: "phen2_2",
-              type: "folder",
             },
           ],
         },
@@ -305,33 +276,29 @@ const Ingestion = () => {
     },
     {
       name: "temp",
-      type: "folder",
+
       subFolders: [
         {
           name: "category1temp",
-          type: "folder",
+
           subFolders: [
             {
               name: "temp1_1",
-              type: "folder",
             },
             {
               name: "temp1_2",
-              type: "folder",
             },
           ],
         },
         {
           name: "category2temp",
-          type: "folder",
+
           subFolders: [
             {
               name: "temp2_1",
-              type: "folder",
             },
             {
               name: "temp2_2",
-              type: "folder",
             },
           ],
         },
@@ -339,33 +306,29 @@ const Ingestion = () => {
     },
     {
       name: "misc",
-      type: "folder",
+
       subFolders: [
         {
           name: "category1",
-          type: "folder",
+
           subFolders: [
             {
               name: "misc1_1",
-              type: "folder",
             },
             {
               name: "misc1_2",
-              type: "folder",
             },
           ],
         },
         {
           name: "category2",
-          type: "folder",
+
           subFolders: [
             {
               name: "misc2_1",
-              type: "folder",
             },
             {
               name: "misc2_2",
-              type: "folder",
             },
           ],
         },
@@ -434,6 +397,126 @@ const Ingestion = () => {
     filterStudies();
   }, []);
 
+  const DUMMY_VIDEO_LIST_FROM_API = [
+    "video1",
+    "video2",
+    "video3",
+    "video4",
+    "video5",
+    "video6",
+    "video7",
+    "video8",
+    "video9",
+    "video10",
+    "video11",
+  ];
+
+  const DUMMY_MISSING_METADATA = [
+    {
+      fileName: "file1.ext",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["1", "3", "5", "7"],
+          value: "3",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["1", "2", "3"],
+          value: "",
+        },
+        {
+          name: "Session",
+          type: "input",
+          options: null,
+          value: "test 1 session",
+        },
+        {
+          name: "Acquisition",
+          type: "select",
+          options: ["Interested", "Not Interested"],
+          value: "",
+        },
+        { name: "Administration", type: "input", options: null, value: "" },
+        { name: "Device", type: "input", options: null, value: "" },
+      ],
+    },
+    {
+      fileName: "file2.extt",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["2", "4", "6", "8"],
+          value: "4",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["4", "5", "6"],
+          value: "5",
+        },
+        { name: "Session", type: "input", options: null, value: "qqq" },
+        {
+          name: "Acquisition",
+          type: "select",
+          options: ["Interested!", "Not Interested!"],
+          value: "Not Interested!",
+        },
+        {
+          name: "Administration",
+          type: "input",
+          options: null,
+          value: "test 2",
+        },
+        { name: "Device", type: "input", options: null, value: "qqq" },
+      ],
+    },
+    {
+      fileName: "file3.exttt",
+      study: "Study A",
+      fields: [
+        {
+          name: "Subject",
+          type: "select",
+          options: ["2.5", "4.5", "6.5", "8.5"],
+          value: "",
+        },
+        {
+          name: "TaskID",
+          type: "select",
+          options: ["7", "8", "9"],
+          value: "",
+        },
+        { name: "Session", type: "input", options: null, value: "" },
+        // {
+        //   name: "Acquisition",
+        //   type: "select",
+        //   options: ["Interested!!", "Not Interested!!"],
+        //   value: "",
+        // },
+        {
+          name: "Administration",
+          type: "input",
+          options: null,
+          value: "test default value!",
+        },
+        { name: "Device", type: "input", options: null, value: "" },
+      ],
+    },
+  ];
+
+  const fetchVideosFromDirectories = () => {
+    console.log("fetching videos");
+    setTimeout(() => {
+      setVideoListFull(DUMMY_VIDEO_LIST_FROM_API);
+    }, 1000);
+  };
+
   if (isAtStart && !availableStudies) {
     return (
       <div>
@@ -458,12 +541,48 @@ const Ingestion = () => {
           // fileExplorer={DUMMY_FILE_EXPLORER_DISPLAY}
           filePath={filePath}
           setFilePath={setFilePath}
+          fetchVideos={fetchVideosFromDirectories}
+          selectedDirectories={selectedDirectories}
+          setSelectedDirectories={setSelectedDirectories}
+          throwNewErrorModal={props.throwNewErrorModal}
+          setHasError={props.setHasError}
         />
       </div>
     );
   }
 
-  if (!isAtStart && !metadata) {
+  if (!isAtStart && !videoListFull) {
+    return (
+      <div>
+        <div className="mt-24"></div>
+        <LoadScreen
+          message={"Retrieving Videos from Selected Directories..."}
+          marginTop="0"
+        />
+      </div>
+    );
+  }
+
+  if (!isAtStart && videoListFull && !hasSelectedVideos) {
+    return (
+      <div>
+        <IngestionSelect
+          videoListFull={videoListFull}
+          setVideoListFull={setVideoListFull}
+          videoListSelected={videoListSelected}
+          setVideoListSelected={setVideoListSelected}
+          DUMMY_VIDEO_LIST_FROM_API={DUMMY_VIDEO_LIST_FROM_API}
+          setHasSelectedVideos={setHasSelectedVideos}
+          setMetadata={setMetadata}
+          DUMMY_MISSING_METADATA={DUMMY_MISSING_METADATA}
+          setIsAtStart={setIsAtStart}
+          throwNewErrorModal={props.throwNewErrorModal}
+        />
+      </div>
+    );
+  }
+
+  if (!isAtStart && hasSelectedVideos && !metadata) {
     return (
       <div>
         <div className="mt-24"></div>
@@ -478,6 +597,7 @@ const Ingestion = () => {
         metadata={metadata}
         setIsAtStart={setIsAtStart}
         setMetadata={setMetadata}
+        setHasSelectedVideos={setHasSelectedVideos}
       />
     );
   }

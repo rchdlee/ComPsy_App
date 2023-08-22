@@ -4,8 +4,8 @@ import IngestionStartError from "./IngestionStartError";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const IngestionStart = (props) => {
-  const [hasError, setHasError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  // const [hasError, setHasError] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState(null);
 
   const DUMMY_AVAILABLE_STUDIES = props.availableStudies;
   const DUMMY_DIRECTORY_FILES = props.fileExplorer;
@@ -111,7 +111,25 @@ const IngestionStart = (props) => {
 
   const continueHandler = () => {
     // props.setIsAtStart(false);
-    console.log("clicked continue!", selectedDirectories);
+    console.log("clicked continue!", props.selectedDirectories);
+
+    if (!props.selectedStudy) {
+      console.log("error-qntsireantrseionateio");
+      props.throwNewErrorModal(
+        "Please select a study and a directory for ingestion"
+      );
+      return;
+    }
+
+    if (props.selectedDirectories.length === 0) {
+      props.throwNewErrorModal("Please select at one directory for ingestion");
+      return;
+    }
+
+    props.setFilePath([]);
+    props.setHasError(false);
+    props.setIsAtStart(false);
+    props.fetchVideos();
     // setTimeout(() => {
     //   props.setMetadata(DUMMY_MISSING_METADATA);
     // }, 500);
@@ -130,6 +148,7 @@ const IngestionStart = (props) => {
     props.setSelectedStudy(selectedStudyData);
     setFurthestDirectoryItem(DUMMY_DIRECTORY_FILES);
     props.setFilePath([]);
+    props.setSelectedDirectories([]);
   };
 
   // const createContinueError = (message) => {
@@ -159,28 +178,30 @@ const IngestionStart = (props) => {
     DUMMY_DIRECTORY_FILES
   );
 
-  console.log(DUMMY_DIRECTORY_FILES, furthestDirectoryItem, "😎😋");
+  // console.log(DUMMY_DIRECTORY_FILES, furthestDirectoryItem, "😎😋");
 
   const fileClickHandler = (e) => {
     const index = e.target.closest("div").id;
     const subFolders = furthestDirectoryItem[index].subFolders;
     const pathDepth = props.filePath.length;
 
+    console.log("furthestdirectoryitem", furthestDirectoryItem);
     const selectedItem = furthestDirectoryItem[index];
 
-    console.log(
-      "file clicked",
-      "depth",
-      pathDepth,
-      "index",
-      index,
-      selectedItem,
-      selectedItem.name,
-      subFolders
-    );
+    // console.log(
+    //   "file clicked",
+    //   "depth",
+    //   pathDepth,
+    //   "index",
+    //   index,
+    //   selectedItem,
+    //   selectedItem.name,
+    //   subFolders
+    // );
 
     if (!subFolders) {
       console.log("end of path");
+      props.throwNewErrorModal("No more directories inside this folder");
       return;
     }
 
@@ -244,28 +265,26 @@ const IngestionStart = (props) => {
   const pathDepth = props.filePath.length;
   // console.log(pathDepth, props.filePath, "💩");
 
-  const [selectedDirectories, setSelectedDirectories] = useState([]);
-
-  const testInputClickHandler = (e) => {
+  const inputClickHandler = (e) => {
     const isChecked = e.target.checked;
     const inputName = e.target.closest("input").id;
-    const filePathFull = `${
-      props.selectedStudy.server_path
-    }/${props.filePath.join("/")}/${inputName}`;
+    const filePathFull = `${props.selectedStudy.server_path}${
+      pathDepth === 0 ? "" : "/"
+    }${props.filePath.join("/")}/${inputName}`;
 
-    console.log(e, isChecked, inputName, filePathFull);
+    console.log(e, pathDepth, isChecked, inputName, filePathFull);
     const filePathInfo = {
       fullPath: filePathFull,
-      fileName: inputName,
+      // fileName: inputName,
     };
 
     if (isChecked) {
       console.log("just checked the box!");
-      setSelectedDirectories((prevState) => [...prevState, filePathInfo]);
+      props.setSelectedDirectories((prevState) => [...prevState, filePathInfo]);
     }
     if (!isChecked) {
       console.log("just UNCHEKED the box!");
-      setSelectedDirectories((prevState) =>
+      props.setSelectedDirectories((prevState) =>
         // prevState.filter((info) => info.fileName !== inputName)
         prevState.filter((info) => info.fullPath !== filePathFull)
       );
@@ -274,101 +293,213 @@ const IngestionStart = (props) => {
 
   const DUMMY_FILE_EXPLORER_JSX = props.selectedStudy
     ? furthestDirectoryItem.map((item, index) => {
-        const filePathFull = `${
-          props.selectedStudy.server_path
-        }/${props.filePath.join("/")}/${item.name}`;
+        const filePathFull = `${props.selectedStudy.server_path}${
+          pathDepth === 0 ? "" : "/"
+        }${props.filePath.join("/")}/${item.name}`;
 
-        if (item.type === "folder") {
-          return (
+        // if (item.type === "folder") {
+        return (
+          <div
+            className="flex justify-between items-center flex-wrap"
+            key={index}
+          >
             <div
-              className="flex gap-3 items-center group"
+              className="group flex gap-3 items-center"
               id={index}
-              key={index}
               onClick={fileClickHandler}
             >
               <FontAwesomeIcon icon="fa-folder" />
               <p className="group-hover:underline">{item.name}</p>
             </div>
-          );
-        }
-        if (item.type === "video") {
-          return (
-            <div
-              className="flex gap-3 items-center group"
-              id={index}
-              key={index}
-              // onClick={fileClickHandler}
-            >
-              <input
-                className="mt-0.5"
-                type="checkbox"
-                id={item.name}
-                // onClick={testInputClickHandler}
-                onChange={testInputClickHandler}
-                checked={
-                  !(
-                    selectedDirectories.filter(
-                      // (path) => path.fileName === item.name
-                      (path) => path.fullPath === filePathFull
-                    ).length === 0
-                  )
-                }
-              />
-              <label htmlFor={item.name} className="group-hover:underline">
-                {item.name}
-              </label>
-              {/* <p className="group-hover:underline">{item.name}</p> */}
-            </div>
-          );
-        }
+            <input
+              className="mt-0.5"
+              type="checkbox"
+              id={item.name}
+              // onClick={testInputClickHandler}
+              onChange={inputClickHandler}
+              checked={
+                !(
+                  props.selectedDirectories.filter(
+                    // (path) => path.fileName === item.name
+                    (path) => path.fullPath === filePathFull
+                  ).length === 0
+                )
+              }
+            />
+          </div>
+        );
       })
     : "";
 
-  const selectAllFilesHandler = () => {
-    const allFilePathInfoFromFolder = furthestDirectoryItem.map((item) => {
-      return {
-        fullPath: `${props.selectedStudy.server_path}/${props.filePath.join(
-          "/"
-        )}/${item.name}`,
-        fileName: item.name,
-      };
-    });
-    const selectedDirectoryNames = selectedDirectories.map(
-      (item) => item.fileName
+  const selectedDirectoryClickHandler = (e) => {
+    const filePath = e.target.closest("p").id;
+    const serverPathLength = props.selectedStudy.server_path.length;
+    const filePathWithoutServerPath = filePath.slice(serverPathLength + 1);
+    const filePathWithoutServerPathArray = filePathWithoutServerPath.split("/");
+
+    const pathLength = filePathWithoutServerPathArray.length;
+    // console.log(props.fileExplorer);
+
+    let parentFolder = props.fileExplorer;
+    for (let i = 0; i < pathLength - 1; i++) {
+      // parentFolder = props.fileExplorer.filter(
+      //   (item) => item.name === filePathWithoutServerPathArray[i]
+      // )[0].subFolders;
+
+      if (i === 0) {
+        parentFolder = parentFolder.filter(
+          (item) => item.name === filePathWithoutServerPathArray[i]
+        )[0];
+        // console.log(parentFolder, "🐨");
+      }
+      if (i > 0) {
+        parentFolder = parentFolder.subFolders.filter(
+          (item) => item.name === filePathWithoutServerPathArray[i]
+        )[0];
+        // console.log(parentFolder, "🐕‍🦺");
+      }
+    }
+
+    // console.log("FINAL", parentFolder);
+    filePathWithoutServerPathArray.pop();
+    const subFolders = parentFolder.subFolders;
+
+    if (!subFolders) {
+      console.log("no subfolders");
+      setFurthestDirectoryItem(parentFolder);
+      props.setFilePath(filePathWithoutServerPathArray);
+      return;
+    }
+
+    console.log(
+      parentFolder,
+      "subfolders:",
+      subFolders,
+      "filepatharray:",
+      filePathWithoutServerPathArray
     );
-    const allFilePathsWithoutDuplicates = allFilePathInfoFromFolder.filter(
-      (item) => !selectedDirectoryNames.includes(item.fileName)
-    );
+
+    setFurthestDirectoryItem(subFolders);
+    props.setFilePath(filePathWithoutServerPathArray);
 
     // console.log(
-    //   furthestDirectoryItem,
-    //   selectedDirectoryNames,
-    //   allFilePathInfoFromFolder,
-    //   allFilePathsWithoutDuplicates
+    //   filePath,
+    //   props.selectedStudy,
+    //   props.filePath,
+    //   serverPathLength,
+    //   filePathWithoutServerPathArray
     // );
-
-    setSelectedDirectories((prevState) => [
-      ...prevState,
-      ...allFilePathsWithoutDuplicates,
-    ]);
   };
 
-  const checkMacrosJSX = (
-    <div className="mt-4">
-      <button
-        className="border-2 dark:border-white px-3 py-1 rounded mr-2"
-        onClick={selectAllFilesHandler}
-      >
-        Select All
-      </button>
-      <button className="border-2 dark:border-white px-3 py-1 rounded mr-2">
-        Deselect All
-      </button>
-    </div>
+  const DUMMY_SELECTED_DIRECTORIES_JSX = props.selectedDirectories.map(
+    (item) => {
+      return (
+        <p
+          className="text-xs hover:underline"
+          key={item.fullPath}
+          id={item.fullPath}
+          onClick={selectedDirectoryClickHandler}
+        >
+          {item.fullPath}
+        </p>
+      );
+    }
   );
+
+  // const selectAllFilesHandler = () => {
+  //   const allFilePathInfoFromFolder = furthestDirectoryItem.map((item) => {
+  //     return {
+  //       fullPath: `${props.selectedStudy.server_path}/${props.filePath.join(
+  //         "/"
+  //       )}/${item.name}`,
+  //       // fileName: item.name,
+  //     };
+  //   });
+  //   const selectedDirectoryNames = props.selectedDirectories.map(
+  //     (item) => item.fullPath
+  //   );
+  //   const allFilePathsWithoutDuplicates = allFilePathInfoFromFolder.filter(
+  //     (item) => !selectedDirectoryNames.includes(item.fullPath)
+  //   );
+
+  //   console.log(
+  //     furthestDirectoryItem,
+  //     selectedDirectoryNames,
+  //     allFilePathInfoFromFolder,
+  //     allFilePathsWithoutDuplicates
+  //   );
+
+  //   props.setSelectedDirectories((prevState) => [
+  //     ...prevState,
+  //     ...allFilePathsWithoutDuplicates,
+  //   ]);
+
+  //   console.log(props.selectedDirectories);
+  // };
+
+  // const deselectAllFilesHandler = () => {
+  //   console.log("deselecting");
+  //   const allFilePathInfoFromFolder = furthestDirectoryItem.map((item) => {
+  //     return {
+  //       fullPath: `${props.selectedStudy.server_path}/${props.filePath.join(
+  //         "/"
+  //       )}/${item.name}`,
+  //       // fileName: item.name,
+  //     };
+  //   });
+
+  //   // const selectedDirectoryNames = props.selectedDirectories.map(
+  //   //   (item) => item.fullPath
+  //   // );
+
+  //   const test = allFilePathInfoFromFolder.map((item) => item.fullPath);
+
+  //   const newDirectory = props.selectedDirectories.filter(
+  //     (item) => !test.includes(item.fullPath)
+  //   );
+  //   console.log(
+  //     allFilePathInfoFromFolder,
+  //     props.selectedDirectories,
+  //     // selectedDirectoryNames,
+  //     newDirectory
+  //   );
+
+  //   props.setSelectedDirectories(newDirectory);
+  // };
+
+  // const checkMacrosJSX = (
+  //   <div className="mt-4">
+  //     <button
+  //       className="border-2 dark:border-white px-3 py-1 rounded mr-2"
+  //       onClick={selectAllFilesHandler}
+  //     >
+  //       Select All
+  //     </button>
+  //     <button
+  //       className="border-2 dark:border-white px-3 py-1 rounded mr-2"
+  //       onClick={deselectAllFilesHandler}
+  //     >
+  //       Deselect All
+  //     </button>
+  //   </div>
+  // );
 
   return (
     <div className="mt-16">
+      {/* <div className="border-2 border-salmonRed rounded dark:bg-cardDark text-blackTextLight dark:text-white w-80 h-16 px-4 absolute top-6 left-1/2 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <FontAwesomeIcon
+            // icon={["far", "circle-xmark"]}
+            icon="triangle-exclamation"
+            size="xl"
+            className="text-salmonRed"
+          />
+          <p>error popup</p>
+        </div>
+        <button>
+          <FontAwesomeIcon icon="xmark" />
+        </button>
+      </div> */}
       <div className="flex justify-center gap-x-20">
         <div className="w-60 lg:w-64 xl:w-80">
           <h4 className="text-lg text-blackTextLight dark:text-white">
@@ -392,22 +523,23 @@ const IngestionStart = (props) => {
               )}
               {DUMMY_FILE_PATH}
             </div>
+            <div className="mt-3 pl-1 flex justify-between text-sm">
+              <p>File Name</p>
+              <p>Select</p>
+            </div>
             {/* <form> */}
-            <div className="mt-2 pl-3">{DUMMY_FILE_EXPLORER_JSX}</div>
-            {furthestDirectoryItem.filter((item) => item.type === "video")
+            <div className="mt-2 px-2 border-b-2 border-blackTextLight dark:border-white pb-4">
+              {DUMMY_FILE_EXPLORER_JSX}
+            </div>
+            {/* {furthestDirectoryItem.filter((item) => item.type === "video")
               .length !== 0
               ? checkMacrosJSX
-              : ""}
+              : ""} */}
 
             {/* </form> */}
-            <div>
-              {selectedDirectories.map((item) => {
-                return (
-                  <p className="text-xs" key={item.fullPath}>
-                    {item.fullPath}
-                  </p>
-                );
-              })}
+            <div className="mt-4">
+              <p className="mb-2">Selected Directories:</p>
+              {DUMMY_SELECTED_DIRECTORIES_JSX}
             </div>
           </div>
         </div>
@@ -416,6 +548,7 @@ const IngestionStart = (props) => {
         <div className="flex gap-2">
           <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white bg-blackTextLight dark:bg-white rounded-full"></div>
           <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white rounded-full"></div>
+          <div className="w-3 h-3 border-2 border-blackTextLight dark:border-white rounded-full"></div>
         </div>
         <div
           className="text-blackTextLight dark:text-white absolute right-20 md:right-40 xl:right-60 hover:underline underline-offset-4"
@@ -423,11 +556,11 @@ const IngestionStart = (props) => {
         >
           <p>Continue</p>
         </div>
-        <IngestionStartError
+        {/* <IngestionStartError
           hasError={hasError}
           setHasError={setHasError}
           errorMessage={errorMessage}
-        />
+        /> */}
       </div>
     </div>
   );
