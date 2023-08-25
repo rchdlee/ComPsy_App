@@ -1,18 +1,12 @@
 const IngestionSelect = (props) => {
+  // Selecting Video Logic
   const videoClickHandler = (e) => {
-    console.log("clicked!", e.target.closest("div").id);
     const selectedVideoName = e.target.closest("div").id;
 
     if (props.videoListSelected?.includes(selectedVideoName)) {
-      console.log("remove video");
-      // const index = props.videoListSelected.findIndex(
-      //   (name) => name === selectedVideoName
-      // );
-
       props.setVideoListSelected((prevState) =>
         prevState.filter((name) => name !== selectedVideoName)
       );
-
       return;
     }
 
@@ -21,6 +15,9 @@ const IngestionSelect = (props) => {
       selectedVideoName,
     ]);
   };
+  //
+
+  // List of Videos from selected directories JSX
   const videoList = props.videoListFull.map((video) => {
     const selected = props.videoListSelected?.includes(video)
       ? "bg-lilacBlue"
@@ -41,6 +38,7 @@ const IngestionSelect = (props) => {
     );
   });
 
+  // Select Macros
   const selectAllFilesHandler = () => {
     props.setVideoListSelected(props.DUMMY_VIDEO_LIST_FROM_API);
   };
@@ -48,7 +46,9 @@ const IngestionSelect = (props) => {
   const deselectAllFilesHandler = () => {
     props.setVideoListSelected([]);
   };
+  //
 
+  // Navigation Controls
   const continueHandler = () => {
     if (props.videoListSelected.length === 0) {
       console.log("please select a video 🦁");
@@ -74,6 +74,7 @@ const IngestionSelect = (props) => {
     props.setVideoListFull(null);
     props.setVideoListSelected([]);
   };
+  //
 
   return (
     <div className="mt-12 text-blackTextLight dark:text-white ">

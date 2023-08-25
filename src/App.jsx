@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import LeftNav from "./components/LeftNav";
-import MainPage from "./components/MainPage";
 
 import Dashboard from "./components/Dashboard";
 import Ingestion from "./components/Ingestion";
@@ -35,6 +34,7 @@ import {
   faXmark,
   faEye,
   faEyeSlash,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -43,9 +43,7 @@ import {
   faCircleXmark,
 } from "@fortawesome/free-regular-svg-icons";
 import { Route, Routes, Navigate } from "react-router-dom";
-import Home from "./components/Home";
 import Login from "./components/Login";
-import PrivateRoutes from "./components/PrivateRoutes";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./components/RootLayout";
@@ -81,15 +79,27 @@ function App() {
     faTriangleExclamation,
     faXmark,
     faEye,
-    faEyeSlash
+    faEyeSlash,
+    faCheck
   );
+
+  // DARK MODE //
   const savedIsDarkMode = JSON.parse(localStorage.getItem("darkMode"));
   const [isDarkMode, setIsDarkMode] = useState(savedIsDarkMode);
-  // const [DUMMY_LOGGED_IN, setDUMMY_LOGGED_IN] = useState(false);
+  //
 
-  const [name, setName] = useState();
+  // LOGIN //
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [name, setName] = useState();
+  //
 
+  // ERROR STATE
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorOffsetType, setErrorOffsetType] = useState("login");
+  //
+
+  // Check if JWT in cookies is valid - keeping user logged in on refresh //
   useEffect(() => {
     const hasJWT = () => {
       // let flag = false;
@@ -104,7 +114,6 @@ function App() {
             },
           });
           if (!response.ok) {
-            // setDUMMY_LOGGED_IN(false);
             return;
           }
           const data = await response.json();
@@ -116,16 +125,12 @@ function App() {
         };
         getSelf();
       }
-      // console.log(flag, "🤑");
-      // return flag;
     };
     hasJWT();
   });
+  //
 
-  const [hasError, setHasError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [errorOffsetType, setErrorOffsetType] = useState("login");
-
+  // function to throw a new error popup //
   const throwNewErrorModal = (message, type) => {
     setHasError(false);
     setErrorOffsetType(type);
@@ -134,7 +139,9 @@ function App() {
       setErrorMessage(message);
     }, 200);
   };
+  //
 
+  // DASHBOARD AVAILABLE ITEMS // -- replace with API soon
   const DUMMY_AVAILABLE_TABS = [
     {
       name: "Data Management",
@@ -213,12 +220,8 @@ function App() {
       element: (
         <RootLayout
           tabs={DUMMY_AVAILABLE_TABS}
-          // DUMMY_LOGGED_IN={DUMMY_LOGGED_IN}
-          // setDUMMY_LOGGED_IN={setDUMMY_LOGGED_IN}
           isDarkMode={isDarkMode}
           setIsDarkMode={setIsDarkMode}
-          // hasJWT={hasJWT}
-          // loggedInBool={loggedInBool}
           isLoggedIn={isLoggedIn}
           setIsLoggedIn={setIsLoggedIn}
           name={name}
@@ -231,10 +234,9 @@ function App() {
       errorElement: (
         <Error
           tabs={DUMMY_AVAILABLE_TABS}
-          // DUMMY_LOGGED_IN={DUMMY_LOGGED_IN}
-          // setDUMMY_LOGGED_IN={setDUMMY_LOGGED_IN}
           isDarkMode={isDarkMode}
           setIsDarkMode={setIsDarkMode}
+          name={name}
         />
       ),
       children: [
@@ -263,10 +265,6 @@ function App() {
         <Login
           isDarkMode={isDarkMode}
           setIsDarkMode={setIsDarkMode}
-          // DUMMY_LOGGED_IN={DUMMY_LOGGED_IN}
-          // setDUMMY_LOGGED_IN={setDUMMY_LOGGED_IN}
-          // hasJWT={hasJWT}
-          // loggedInBool={loggedInBool}
           isLoggedIn={isLoggedIn}
           setIsLoggedIn={setIsLoggedIn}
           hasError={hasError}
@@ -279,63 +277,9 @@ function App() {
     },
   ]);
 
-  // if (isLoggedIn) {
-  //   return <Navigate to="/" />;
-  // }
-  // if (!isLoggedIn) {
-  //   return <Navigate to="/login" />;
-  // }
-
   return (
     <div className={isDarkMode ? "dark" : ""}>
       <RouterProvider router={router} />
-      {/* <Routes>
-        <Route element={<PrivateRoutes DUMMY_LOGGED_IN={DUMMY_LOGGED_IN} />}>
-          <Route
-            element={
-              <Home
-                isDarkMode={isDarkMode}
-                setIsDarkMode={setIsDarkMode}
-                setDUMMY_LOGGED_IN={setDUMMY_LOGGED_IN}
-              />
-            }
-            path="*"
-          />
-        </Route>
-        <Route
-          path="/login"
-          element={
-            <Login
-              DUMMY_LOGGED_IN={DUMMY_LOGGED_IN}
-              setDUMMY_LOGGED_IN={setDUMMY_LOGGED_IN}
-              isDarkMode={isDarkMode}
-              setIsDarkMode={setIsDarkMode}
-            />
-          }
-        />
-      </Routes> */}
-
-      {/* <div className="w-screen h-max bg-backgroundLight dark:bg-backgroundDark flex z-0">
-        <LeftNav tabs={DUMMY_AVAILABLE_TABS} /> */}
-
-      {/* <div className="grow mt-4 mx-12">
-          <TopBar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-          <Routes>
-            <Route
-              path="/home"
-              element={<Dashboard tabs={DUMMY_AVAILABLE_TABS} />}
-            />
-            <Route path="/data-management" element={<DataManagement />} />
-            <Route path="/data-management/ingestion" element={<Ingestion />} />
-          </Routes>
-        </div> */}
-
-      {/* <MainPage
-          isDarkMode={isDarkMode}
-          setIsDarkMode={setIsDarkMode}
-          tabs={DUMMY_AVAILABLE_TABS}
-        />
-      </div> */}
     </div>
   );
 }

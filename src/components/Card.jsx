@@ -2,13 +2,9 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import DataCoilComp from "../icons/DataCoilComp";
-
 const Card = (props) => {
   let backgroundColor;
   let backgroundColorActive;
-
-  // console.log(<Datacoil />);
 
   if (props.color === "lilacBlue") {
     backgroundColor = "bg-lilacBlue";
@@ -44,18 +40,6 @@ const Card = (props) => {
         ></div>
       </Link>
     </div>
-    // <div className="relative">
-    //   <div className="w-72 h-40 bg-white rounded-lg text-white block z-30">
-    //     <div className="p-6">
-    //       <Datacoil />
-    //       <h4 className="text-lg font-bold mt-3 z-50">Data Management</h4>
-    //       <p className="text-xs mt-0.5">
-    //         Tools for data ingestion, querying, sampling, and editing
-    //       </p>
-    //     </div>
-    //   </div>
-    //   <div className="w-72 h-40 bg-lilacBlue rounded-lg text-white absolute top-1 left-1 z-10"></div>
-    // </div>
   );
 };
 

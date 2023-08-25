@@ -8,28 +8,33 @@ import LoadScreen from "./LoadScreen";
 import ErrorModal from "./ErrorModal";
 
 const Login = (props) => {
+  // Login State -- should this be like this, or something different?
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+  //
 
+  // Password visibility state
+  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+  //
+
+  // RHF
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  //
 
+  // Login Screen Dark Mode Switch
   const handleDarkModeSwitch = () => {
     props.setIsDarkMode((prevState) => {
       localStorage.setItem("darkMode", JSON.stringify(!prevState));
       return !prevState;
     });
   };
+  //
 
-  // console.log("errors", errors);
-
-  // const flag = props.hasJWT();
-
+  // Login Button Logic
   const onSubmit = async (data) => {
-    // console.log(data);
     setIsLoggingIn(true);
 
     const response = await fetch(
@@ -38,15 +43,11 @@ const Login = (props) => {
         method: "POST",
         headers: {
           Accept: "application.json",
-          // "Content-Type": "application/json",
         },
-        // mode: "no-cors",
       }
     );
 
     if (!response.ok) {
-      // console.error("error with fetch!");
-      // alert("incorrect login credentials");
       props.throwNewErrorModal(
         "Incorrect login credentials. Please try again",
         "login"
@@ -59,22 +60,17 @@ const Login = (props) => {
     const token = dataAPI.access_token;
     localStorage.setItem("jwt", token);
     props.setIsLoggedIn(true);
-    // props.setDUMMY_LOGGED_IN(true);
-
-    // setTimeout(() => {
-    //   props.setDUMMY_LOGGED_IN(true);
-    // }, 1500);
   };
-
-  // if (props.DUMMY_LOGGED_IN) {
-  // if (props.loggedInBool) {
   if (props.isLoggedIn) {
     return <Navigate to="/" />;
   }
+  //
 
+  // Toggle Password Input Visibility
   const passwordVisibilityHandler = () => {
     setPasswordIsVisible((prevState) => !prevState);
   };
+  //
 
   return (
     <div className="w-screen h-screen text-blackTextLight dark:text-white bg-backgroundLight dark:bg-backgroundDark">
@@ -116,8 +112,6 @@ const Login = (props) => {
           className="flex flex-col items-center mt-5"
         >
           <div>
-            {/* <label htmlFor="">Username</label> */}
-            {/* {errors.username && ( */}
             <p
               className={`text-xs text-error dark:text-salmonRed ${
                 errors.username ? "" : "opacity-0"
@@ -125,7 +119,6 @@ const Login = (props) => {
             >
               Please enter username
             </p>
-            {/* )} */}
             <input
               {...register("username", { required: true })}
               placeholder="Username"
@@ -135,8 +128,6 @@ const Login = (props) => {
             />
           </div>
           <div className="mt-2 relative">
-            {/* <label htmlFor="">Password</label> */}
-            {/* {errors.password && ( */}
             <p
               className={`text-xs text-error dark:text-salmonRed ${
                 errors.password ? "" : "opacity-0"
@@ -144,7 +135,6 @@ const Login = (props) => {
             >
               Please enter password
             </p>
-            {/* )} */}
             <input
               {...register("password", { required: true })}
               placeholder="Password"
@@ -170,7 +160,6 @@ const Login = (props) => {
               type="submit"
               value="Log In"
               className="px-8 py-4 mt-8 border-2 border-black bg-lilacBlue disabled:opacity-50 text-blackTextLight "
-              // onClick={buttonClickHandler}
             />
           )}
         </form>

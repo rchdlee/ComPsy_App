@@ -12,8 +12,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //   faGears,
 // } from "@fortawesome/free-solid-svg-icons";
 
-import Pencil from "../icons/Pencil";
-import SyringeSmall from "../icons/SyringeSmall";
+// import Pencil from "../icons/Pencil";
+// import SyringeSmall from "../icons/SyringeSmall";
 
 const LeftNav = (props) => {
   const [menuIsOpen, setMenuIsOpen] = useState(false);

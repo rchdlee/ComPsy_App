@@ -20,7 +20,7 @@ const Error = (props) => {
         setDUMMY_LOGGED_IN={props.setDUMMY_LOGGED_IN}
       />
       <div className="grow mt-20 sm:mt-24 lg:mt-4 w-72 sm:w-[560px] md:w-[650px] lg:w-[650px] xl:w-[900px] 2xl:w-[1050px] mx-auto xl:mx-12">
-        <div className="md:w-[650px] lg:w-[650px] xl:w-[915px] 2xl:w-[1050px] flex justify-between mx-auto mt-2">
+        {/* <div className="md:w-[650px] lg:w-[650px] xl:w-[915px] 2xl:w-[1050px] flex justify-between mx-auto mt-2">
           <div className="text-sm text-darkTextLight dark:text-white flex items-center gap-2">
             <Link to="/">
               <div className="flex items-center gap-2 hover:underline underline-offset-2">
@@ -28,7 +28,6 @@ const Error = (props) => {
                 <p>Home</p>
               </div>
             </Link>
-            {/* {NavPath} */}
           </div>
           <div className="flex gap-x-8 items-center">
             <div className="hidden sm:flex items-center gap-x-3 rounded-full px-4 py-2 bg-cardLight dark:bg-cardDark">
@@ -39,15 +38,13 @@ const Error = (props) => {
                 />
               </div>
               <p className="text-darkTextLight dark:text-white text-sm xl:text-base">
-                Birkan Tunc
+                {props.name}
               </p>
             </div>
-            {/* <div> */}
-            {/* <label> */}
-            {/* <span>Switch with default style</span> */}
             <Switch
               onChange={handleDarkModeSwitch}
-              checked={props.isDarkMode}
+              // checked={props.isDarkMode}
+              checked={false}
               height={32}
               width={64}
               activeBoxShadow="0 0 2px 3px #5d5d5d"
@@ -68,15 +65,19 @@ const Error = (props) => {
                 </div>
               }
             />
-            {/* </label> */}
-            {/* </div> */}
           </div>
-        </div>
+        </div> */}
         {/* <Outlet /> */}
-        <div className="text-center text-blackTextLight dark:text-white">
+        <div className="text-center text-blackTextLight dark:text-white mt-20">
           <h1 className="text-2xl text-center mt-16">There was an error!</h1>
           <p className="mt-4">Page not found</p>
-          <p className="mt-4">Please return home</p>
+          <div className="flex gap-1 items-center justify-center">
+            <p className="mt-4">Please return</p>
+            <Link to="/" className="mt-4 underline hover:font-bold">
+              {" "}
+              home
+            </Link>
+          </div>
         </div>
       </div>
     </div>

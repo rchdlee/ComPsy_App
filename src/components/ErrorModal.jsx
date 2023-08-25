@@ -27,9 +27,7 @@ const ErrorModal = (props) => {
         <p className="text-base pl-2 pr-4">{props.errorMessage}</p>
       </div>
       <button onClick={closeErrorHandler}>
-        {/* <div className="border-2 border-blackTextWhite dark:border-white rounded px-1"> */}
         <FontAwesomeIcon icon="xmark" />
-        {/* </div> */}
       </button>
     </div>
   );

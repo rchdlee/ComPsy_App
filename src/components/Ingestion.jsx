@@ -6,31 +6,27 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const Ingestion = (props) => {
-  // STEP 1
+  // State for STEP 1 - IngestionStart
   const [isAtStart, setIsAtStart] = useState(true);
   const [availableStudies, setAvailableStudies] = useState(null);
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [filePath, setFilePath] = useState([]);
   const [selectedDirectories, setSelectedDirectories] = useState([]);
+  //
 
-  // STEP 2
+  // State for STEP 2 - IngestionSelect
   const [videoListFull, setVideoListFull] = useState(null);
   const [videoListSelected, setVideoListSelected] = useState([]);
   const [hasSelectedVideos, setHasSelectedVideos] = useState(false);
+  //
 
-  // STEP 3
+  // State for STEP 3 - IngestionMetadata
   const [metadata, setMetadata] = useState(null);
+  //
 
-  // console.log(metadata, "😋");
-  const DUMMY_AVAILABLE_STUDIES = [
-    "Study 1",
-    "Study 2",
-    "Social Coordination",
-    "Study 4",
-    "Study 5",
-    "Study 6",
-  ];
+  // // STEP 1 - IngestionStart //
 
+  // DUMMY available files based on selected study
   const DUMMY_FILE_EXPLORER_firststudy = [
     {
       name: "participant_data_firststudy",
@@ -342,16 +338,8 @@ const Ingestion = (props) => {
       ? DUMMY_FILE_EXPLORER_firststudy
       : DUMMY_FILE_EXPLORER_secondstudy;
 
-  const retrieveAvailableStudies = () => {
-    setAvailableStudies(DUMMY_AVAILABLE_STUDIES);
-  };
-
+  // Retrieve all studies that user has access to // -- maybe backend could do this separately without having to retrieve all studies?
   useEffect(() => {
-    // setTimeout(() => {
-    //   console.log("retrive studies (timeout)");
-    //   retrieveAvailableStudies();
-    // }, 500);
-
     // should I store ID somewhere earlier from app.jsx component? is fetching here too much?
     const getSelf = async () => {
       const response = await fetch("http://localhost:8000/user/get_self", {
@@ -388,15 +376,18 @@ const Ingestion = (props) => {
 
       // console.log(selfID, allStudies, "😶");
       const availableStudies = allStudies.filter((study) =>
-        study.users.includes(selfID)
+      study.users.includes(selfID)
       );
-
+      
       // console.log(availableStudies, "🥶");
       setAvailableStudies(availableStudies);
     };
     filterStudies();
   }, []);
-
+  //
+  
+  // // STEP 2 // //
+  
   const DUMMY_VIDEO_LIST_FROM_API = [
     "video1",
     "video2",
@@ -410,6 +401,16 @@ const Ingestion = (props) => {
     "video10",
     "video11",
   ];
+  
+  // Retrieve videos from selected directories -- DUMMY
+  const fetchVideosFromDirectories = () => {
+    console.log("fetching videos");
+    setTimeout(() => {
+      setVideoListFull(DUMMY_VIDEO_LIST_FROM_API);
+    }, 1000);
+  };
+
+  // // STEP 3 // //
 
   const DUMMY_MISSING_METADATA = [
     {
@@ -510,13 +511,9 @@ const Ingestion = (props) => {
     },
   ];
 
-  const fetchVideosFromDirectories = () => {
-    console.log("fetching videos");
-    setTimeout(() => {
-      setVideoListFull(DUMMY_VIDEO_LIST_FROM_API);
-    }, 1000);
-  };
+  // // RENDERS // //
 
+  // initial load
   if (isAtStart && !availableStudies) {
     return (
       <div>
@@ -526,6 +523,7 @@ const Ingestion = (props) => {
     );
   }
 
+  // STEP 1 - IngestionStart
   if (isAtStart && availableStudies) {
     return (
       <div>
@@ -551,6 +549,7 @@ const Ingestion = (props) => {
     );
   }
 
+  // load for step 2
   if (!isAtStart && !videoListFull) {
     return (
       <div>
@@ -563,6 +562,7 @@ const Ingestion = (props) => {
     );
   }
 
+  // STEP 2 - IngestionSelect
   if (!isAtStart && videoListFull && !hasSelectedVideos) {
     return (
       <div>
@@ -583,6 +583,7 @@ const Ingestion = (props) => {
     );
   }
 
+  // load for step 3
   if (!isAtStart && hasSelectedVideos && !metadata) {
     return (
       <div>
@@ -592,6 +593,7 @@ const Ingestion = (props) => {
     );
   }
 
+  // STEP 3 - IngestionMetadata
   if (!isAtStart && metadata) {
     return (
       <IngestionMetadata
@@ -602,16 +604,6 @@ const Ingestion = (props) => {
       />
     );
   }
-
-  // return (
-  //   <div>
-  //     {/* {metadata ? (
-  //       <IngestionStart setIsAtStart={setIsAtStart} setMetadata={setMetadata} />
-  //     ) : (
-  //       <IngestionMetadata metadata={metadata} />
-  //     )} */}
-  //   </div>
-  // );
 };
 
 export default Ingestion;

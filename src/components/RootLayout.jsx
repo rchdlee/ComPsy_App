@@ -7,15 +7,13 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 const RootLayout = (props) => {
-  // const flag = props.hasJWT();
-  // console.log(flag, "👽");
-
   // remove error modal on route change
   let location = useLocation();
 
   useEffect(() => {
     props.setHasError(false);
   }, [location]);
+  //
 
   return (
     <div className="w-screen h-full sm:h-screen bg-backgroundLight dark:bg-backgroundDark flex flex-col md:flex-row  z-0">
@@ -36,11 +34,7 @@ const RootLayout = (props) => {
           setIsDarkMode={props.setIsDarkMode}
           name={props.name}
         />
-        {/* <Outlet /> */}
-        {/* {props.DUMMY_LOGGED_IN ? <Outlet /> : <Navigate to="/login" />} */}
-        {/* {props.loggedInBool ? <Outlet /> : <Navigate to="/login" />} */}
         {props.isLoggedIn ? <Outlet /> : <Navigate to="/login" />}
-        {/* <Outlet /> */}
       </div>
     </div>
   );
