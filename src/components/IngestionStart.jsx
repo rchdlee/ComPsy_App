@@ -116,13 +116,17 @@ const IngestionStart = (props) => {
     if (!props.selectedStudy) {
       console.log("error-qntsireantrseionateio");
       props.throwNewErrorModal(
-        "Please select a study and a directory for ingestion"
+        "Please select a study and a directory for ingestion",
+        "app"
       );
       return;
     }
 
     if (props.selectedDirectories.length === 0) {
-      props.throwNewErrorModal("Please select at one directory for ingestion");
+      props.throwNewErrorModal(
+        "Please select at least one directory for ingestion",
+        "app"
+      );
       return;
     }
 
@@ -201,7 +205,7 @@ const IngestionStart = (props) => {
 
     if (!subFolders) {
       console.log("end of path");
-      props.throwNewErrorModal("No more directories inside this folder");
+      props.throwNewErrorModal("No more directories inside this folder", "app");
       return;
     }
 
@@ -237,7 +241,7 @@ const IngestionStart = (props) => {
   // const DUMMY_FILE_PATH_JSX = filePath;
   const initial_DUMMY_FILE_PATH_JSX = props.selectedStudy ? (
     <p
-      className="hover:underline"
+      className="hover:underline hover:cursor-pointer"
       onClick={rootPathClickHandler}
       key={"initial_path"}
     >
@@ -252,7 +256,7 @@ const IngestionStart = (props) => {
       <div className="flex items-center gap-3" key={index}>
         <p
           id={index}
-          className="hover:underline"
+          className="hover:underline hover:cursor-pointer"
           onClick={filePathClickHandler}
         >
           {pathName}
@@ -309,7 +313,9 @@ const IngestionStart = (props) => {
               onClick={fileClickHandler}
             >
               <FontAwesomeIcon icon="fa-folder" />
-              <p className="group-hover:underline">{item.name}</p>
+              <p className="group-hover:underline group-hover:cursor-pointer">
+                {item.name}
+              </p>
             </div>
             <input
               className="mt-0.5"
@@ -395,7 +401,7 @@ const IngestionStart = (props) => {
     (item) => {
       return (
         <p
-          className="text-xs hover:underline"
+          className="text-xs hover:underline hover:cursor-pointer"
           key={item.fullPath}
           id={item.fullPath}
           onClick={selectedDirectoryClickHandler}
@@ -523,24 +529,28 @@ const IngestionStart = (props) => {
               )}
               {DUMMY_FILE_PATH}
             </div>
-            <div className="mt-3 pl-1 flex justify-between text-sm">
-              <p>File Name</p>
-              <p>Select</p>
-            </div>
-            {/* <form> */}
-            <div className="mt-2 px-2 border-b-2 border-blackTextLight dark:border-white pb-4">
-              {DUMMY_FILE_EXPLORER_JSX}
-            </div>
-            {/* {furthestDirectoryItem.filter((item) => item.type === "video")
-              .length !== 0
-              ? checkMacrosJSX
-              : ""} */}
+            {props.selectedStudy && (
+              <div>
+                <div className="mt-3 pl-1 flex justify-between text-sm">
+                  <p>File Name</p>
+                  <p>Select</p>
+                </div>
+                {/* <form> */}
+                <div className="mt-2 px-2 border-b-2 border-blackTextLight dark:border-white pb-4">
+                  {DUMMY_FILE_EXPLORER_JSX}
+                </div>
+                {/* {furthestDirectoryItem.filter((item) => item.type === "video")
+            .length !== 0
+            ? checkMacrosJSX
+          : ""} */}
 
-            {/* </form> */}
-            <div className="mt-4">
-              <p className="mb-2">Selected Directories:</p>
-              {DUMMY_SELECTED_DIRECTORIES_JSX}
-            </div>
+                {/* </form> */}
+                <div className="mt-4">
+                  <p className="mb-2">Selected Directories:</p>
+                  {DUMMY_SELECTED_DIRECTORIES_JSX}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

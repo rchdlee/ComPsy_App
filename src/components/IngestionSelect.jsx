@@ -53,12 +53,14 @@ const IngestionSelect = (props) => {
     if (props.videoListSelected.length === 0) {
       console.log("please select a video 🦁");
       props.throwNewErrorModal(
-        "Please select at least one video for ingestion"
+        "Please select at least one video for ingestion",
+        "app"
       );
       return;
     }
 
     props.setHasSelectedVideos(true);
+    props.setHasError(false);
     console.log("videos selected:", props.videoListSelected);
 
     setTimeout(() => {
@@ -67,6 +69,7 @@ const IngestionSelect = (props) => {
   };
 
   const backButtonHandler = () => {
+    props.setHasError(false);
     props.setIsAtStart(true);
     props.setVideoListFull(null);
     props.setVideoListSelected([]);

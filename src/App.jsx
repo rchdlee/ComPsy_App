@@ -33,6 +33,8 @@ import {
   faChevronRight,
   faTriangleExclamation,
   faXmark,
+  faEye,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -48,6 +50,8 @@ import PrivateRoutes from "./components/PrivateRoutes";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./components/RootLayout";
 import Error from "./components/Error";
+
+import { useLocation } from "react-router-dom";
 
 function App() {
   library.add(
@@ -75,7 +79,9 @@ function App() {
     faChevronRight,
     faCircleXmark,
     faTriangleExclamation,
-    faXmark
+    faXmark,
+    faEye,
+    faEyeSlash
   );
   const savedIsDarkMode = JSON.parse(localStorage.getItem("darkMode"));
   const [isDarkMode, setIsDarkMode] = useState(savedIsDarkMode);
@@ -118,10 +124,15 @@ function App() {
 
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [errorOffsetType, setErrorOffsetType] = useState("login");
 
-  const throwNewErrorModal = (message) => {
-    setHasError(true);
-    setErrorMessage(message);
+  const throwNewErrorModal = (message, type) => {
+    setHasError(false);
+    setErrorOffsetType(type);
+    setTimeout(() => {
+      setHasError(true);
+      setErrorMessage(message);
+    }, 200);
   };
 
   const DUMMY_AVAILABLE_TABS = [
@@ -214,6 +225,7 @@ function App() {
           hasError={hasError}
           setHasError={setHasError}
           errorMessage={errorMessage}
+          errorOffsetType={errorOffsetType}
         />
       ),
       errorElement: (
@@ -257,6 +269,11 @@ function App() {
           // loggedInBool={loggedInBool}
           isLoggedIn={isLoggedIn}
           setIsLoggedIn={setIsLoggedIn}
+          hasError={hasError}
+          setHasError={setHasError}
+          errorMessage={errorMessage}
+          throwNewErrorModal={throwNewErrorModal}
+          errorOffsetType={errorOffsetType}
         />
       ),
     },

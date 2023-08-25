@@ -5,9 +5,11 @@ import Switch from "react-switch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForm } from "react-hook-form";
 import LoadScreen from "./LoadScreen";
+import ErrorModal from "./ErrorModal";
 
 const Login = (props) => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   const {
     register,
@@ -29,10 +31,7 @@ const Login = (props) => {
   const onSubmit = async (data) => {
     // console.log(data);
     setIsLoggingIn(true);
-    console.log(
-      data,
-      `starting login request with username: ${data.username} and password: ${data.password}`
-    );
+
     const response = await fetch(
       `http://localhost:8000/user/login?username=${data.username}&password=${data.password}`,
       {
@@ -46,8 +45,12 @@ const Login = (props) => {
     );
 
     if (!response.ok) {
-      console.error("error with fetch!");
-      alert("incorrect login credentials");
+      // console.error("error with fetch!");
+      // alert("incorrect login credentials");
+      props.throwNewErrorModal(
+        "Incorrect login credentials. Please try again",
+        "login"
+      );
       setIsLoggingIn(false);
       return;
     }
@@ -69,8 +72,18 @@ const Login = (props) => {
     return <Navigate to="/" />;
   }
 
+  const passwordVisibilityHandler = () => {
+    setPasswordIsVisible((prevState) => !prevState);
+  };
+
   return (
     <div className="w-screen h-screen text-blackTextLight dark:text-white bg-backgroundLight dark:bg-backgroundDark">
+      <ErrorModal
+        hasError={props.hasError}
+        setHasError={props.setHasError}
+        errorMessage={props.errorMessage}
+        errorOffsetType={props.errorOffsetType}
+      />
       <div className="flex justify-end pr-12 pt-8">
         <Switch
           onChange={handleDarkModeSwitch}
@@ -118,9 +131,10 @@ const Login = (props) => {
               placeholder="Username"
               type="text"
               className={`bg-white dark:bg-backgroundDark h-10 mt-1 px-3 border-2 border-blackTextLight dark:border-white rounded`}
+              autoComplete="off"
             />
           </div>
-          <div className="mt-2">
+          <div className="mt-2 relative">
             {/* <label htmlFor="">Password</label> */}
             {/* {errors.password && ( */}
             <p
@@ -134,9 +148,20 @@ const Login = (props) => {
             <input
               {...register("password", { required: true })}
               placeholder="Password"
-              type="text"
+              type={passwordIsVisible ? "text" : "password"}
               className={`bg-white dark:bg-backgroundDark h-10 mt-1 px-3 border-2 border-blackTextLight dark:border-white rounded`}
+              autoComplete="off"
             />
+            <div
+              className="absolute right-3 top-7"
+              onClick={passwordVisibilityHandler}
+            >
+              {passwordIsVisible ? (
+                <FontAwesomeIcon icon="eye-slash" />
+              ) : (
+                <FontAwesomeIcon icon="eye" />
+              )}
+            </div>
           </div>
           {isLoggingIn ? (
             <LoadScreen marginTop="8" />

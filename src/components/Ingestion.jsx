@@ -576,6 +576,7 @@ const Ingestion = (props) => {
           setMetadata={setMetadata}
           DUMMY_MISSING_METADATA={DUMMY_MISSING_METADATA}
           setIsAtStart={setIsAtStart}
+          setHasError={props.setHasError}
           throwNewErrorModal={props.throwNewErrorModal}
         />
       </div>

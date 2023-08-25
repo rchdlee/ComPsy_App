@@ -4,15 +4,26 @@ import TopBar from "./TopBar";
 import ErrorModal from "./ErrorModal";
 import { useEffect } from "react";
 
+import { useLocation } from "react-router-dom";
+
 const RootLayout = (props) => {
   // const flag = props.hasJWT();
   // console.log(flag, "👽");
+
+  // remove error modal on route change
+  let location = useLocation();
+
+  useEffect(() => {
+    props.setHasError(false);
+  }, [location]);
+
   return (
     <div className="w-screen h-full sm:h-screen bg-backgroundLight dark:bg-backgroundDark flex flex-col md:flex-row  z-0">
       <ErrorModal
         hasError={props.hasError}
         setHasError={props.setHasError}
         errorMessage={props.errorMessage}
+        errorOffsetType={props.errorOffsetType}
       />
       <LeftNav
         tabs={props.tabs}
