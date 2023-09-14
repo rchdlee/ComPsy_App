@@ -7,6 +7,7 @@ const ErrorModal = (props) => {
     props.setHasError(false);
   };
 
+  // change so it's 'login' vs 'app'
   const offsetXStyle =
     props.errorOffsetType === "login"
       ? "left-[calc(50%-160px)]"

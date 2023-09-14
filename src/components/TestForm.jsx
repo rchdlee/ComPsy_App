@@ -1,5 +1,5 @@
 const TestForm = (props) => {
-  // show form item if it is part of the selected file's metadata 
+  // show form item if it is part of the selected file's metadata
   const hiddenBool = props.hidden;
   const display = hiddenBool ? "hidden" : "";
   //

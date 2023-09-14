@@ -1,7 +1,10 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 const IngestionSelect = (props) => {
   // Selecting Video Logic
   const videoClickHandler = (e) => {
     const selectedVideoName = e.target.closest("div").id;
+    console.log(selectedVideoName, "🤩");
 
     if (props.videoListSelected?.includes(selectedVideoName)) {
       props.setVideoListSelected((prevState) =>
@@ -18,29 +21,142 @@ const IngestionSelect = (props) => {
   //
 
   // List of Videos from selected directories JSX
-  const videoList = props.videoListFull.map((video) => {
-    const selected = props.videoListSelected?.includes(video)
-      ? "bg-lilacBlue"
-      : "text-blackTextLight dark:text-white hover:bg-cardLight dark:hover:bg-cardDark";
+  // const videoList = props.videoListFull.map((file) => {
+  //   const selected = props.videoListSelected?.includes(file)
+  //     ? "bg-lilacBlue"
+  //     : "text-blackTextLight dark:text-white hover:bg-cardLight dark:hover:bg-cardDark";
 
+  //   return (
+  //     <div className="flex justify-center" key={file.fullPath}>
+  //       {/* <div className="w-1/2"></div> */}
+  //       <div
+  //         className={`w-96 border-2 border-blackTextLight dark:border-white rounded mb-2 h-16 flex flex-col justify-center mt-2 first:mt-0 pl-4 mr-1 ${selected}`}
+  //         id={file.fullPath}
+  //         onClick={videoClickHandler}
+  //       >
+  //         {/* <input type="checkbox" /> */}
+  //         <p className="text-[10px]">{file.fullPath}</p>
+  //         <p>{file.name}</p>
+  //       </div>
+  //     </div>
+  //   );
+  // });
+
+  // list of files UPDATED (with new)
+  const fileList = props.videoListFull.map((category) => {
+    const videoFiles = category.files.filter(
+      (file) => file.fileType === "video"
+    );
+    const audioFiles = category.files.filter(
+      (file) => file.fileType === "audio"
+    );
     return (
-      <div className="flex justify-center" key={video}>
-        {/* <div className="w-1/2"></div> */}
-        <div
-          className={`w-96 border-2 border-blackTextLight dark:border-white rounded mb-2 h-10 flex items-center mt-2 first:mt-0 pl-4 mr-1 ${selected}`}
-          id={video}
-          onClick={videoClickHandler}
-        >
-          {/* <input type="checkbox" /> */}
-          <p>{video}</p>
+      <div key={category.directory}>
+        <p className="text-lg my-2">{category.directory}</p>
+        <div>
+          <p className="ml-8 text-xs">Video Files</p>
+
+          {videoFiles.map((file) => {
+            const selected = props.videoListSelected?.includes(file.fullPath)
+              ? "bg-lilacBlue"
+              : "text-blackTextLight dark:text-white hover:bg-cardLight dark:hover:bg-cardDark";
+
+            return (
+              <div
+                className={`ml-8 border-2 border-blackTextLight dark:border-white rounded mb-2 h-16 flex items-center gap-4  mt-2 first:mt-0 pl-4 mr-1 ${selected}`}
+                id={file.fullPath}
+                key={file.fullPath}
+                onClick={videoClickHandler}
+              >
+                {file.fileType === "video" && (
+                  <FontAwesomeIcon icon="video" size="lg" />
+                )}
+                <div className="flex flex-col justify-center">
+                  <p className="text-[10px]">{file.fullPath}</p>
+                  <p>{file.name}</p>
+                </div>
+              </div>
+            );
+          })}
+          <div>
+            <p className="ml-8 text-xs">Audio Files</p>
+          </div>
+          {audioFiles.map((file) => {
+            const selected = props.videoListSelected?.includes(file.fullPath)
+              ? "bg-lilacBlue"
+              : "text-blackTextLight dark:text-white hover:bg-cardLight dark:hover:bg-cardDark";
+
+            return (
+              <div
+                className={`ml-8 border-2 border-blackTextLight dark:border-white rounded mb-2 h-16 flex items-center gap-4  mt-2 first:mt-0 pl-4 mr-1 ${selected}`}
+                id={file.fullPath}
+                key={file.fullPath}
+                onClick={videoClickHandler}
+              >
+                {file.fileType === "audio" && (
+                  <FontAwesomeIcon icon="music" size="lg" />
+                )}
+                <div className="flex flex-col justify-center">
+                  <p className="text-[10px]">{file.fullPath}</p>
+                  <p>{file.name}</p>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* {category.files.map((file) => {
+            const selected = props.videoListSelected?.includes(file.fullPath)
+              ? "bg-lilacBlue"
+              : "text-blackTextLight dark:text-white hover:bg-cardLight dark:hover:bg-cardDark";
+
+            return (
+              <div
+                className={`ml-8 border-2 border-blackTextLight dark:border-white rounded mb-2 h-16 flex items-center gap-4  mt-2 first:mt-0 pl-4 mr-1 ${selected}`}
+                id={file.fullPath}
+                key={file.fullPath}
+                onClick={videoClickHandler}
+              >
+                {file.fileType === "video" && (
+                  <FontAwesomeIcon icon="video" size="lg" />
+                )}
+                {file.fileType === "audio" && (
+                  <FontAwesomeIcon icon="music" size="lg" />
+                )}
+                <div className="flex flex-col justify-center">
+                  <p className="text-[10px]">{file.fullPath}</p>
+                  <p>{file.name}</p>
+                </div>
+              </div>
+            );
+          })} */}
         </div>
       </div>
     );
   });
+  //
 
   // Select Macros
   const selectAllFilesHandler = () => {
-    props.setVideoListSelected(props.DUMMY_VIDEO_LIST_FROM_API);
+    // props.setVideoListSelected(props.DUMMY_VIDEO_LIST_FROM_API);
+    // const concatArrays = (...arr) => {
+    //   const res = arr.reduce((acc, val) => {
+    //     return acc.concat(...val);
+    //   }, []);
+    //   return res;
+    // };
+
+    const DUMMY_FILENAMES = props.DUMMY_VIDEO_LIST_FROM_API.map((file) => {
+      return file.fullPath;
+    });
+
+    // const allFileFullPaths = props.videoListFull.map((obj) => {
+    //   return ...obj.files;
+    // });
+
+    // console.log(allFileFullPaths);
+
+    // props.setVideoListSelected(props.DUMMY_VIDEO_LIST_FROM_API);
+    props.setVideoListSelected(DUMMY_FILENAMES);
   };
 
   const deselectAllFilesHandler = () => {
@@ -64,7 +180,9 @@ const IngestionSelect = (props) => {
     console.log("videos selected:", props.videoListSelected);
 
     setTimeout(() => {
-      props.setMetadata(props.DUMMY_MISSING_METADATA);
+      console.log("dummy 2", props.DUMMY_MISSING_METADATA_NEW);
+      // props.setMetadata(props.DUMMY_MISSING_METADATA);
+      props.setMetadata(props.DUMMY_MISSING_METADATA_NEW);
     }, 1500);
   };
 
@@ -84,7 +202,8 @@ const IngestionSelect = (props) => {
           Select Videos for Ingestion:
         </h3>
         <div className="overflow-scroll w-96 h-96 mt-6 mx-auto">
-          {videoList}
+          {/* {videoList} */}
+          {fileList}
         </div>
       </div>
       {/* </div> */}

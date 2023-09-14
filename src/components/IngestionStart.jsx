@@ -202,7 +202,8 @@ const IngestionStart = (props) => {
 
   // Navigate to the parent folder of a selected directory on click
   const selectedDirectoryClickHandler = (e) => {
-    const filePath = e.target.closest("p").id;
+    // const filePath = e.target.closest("p").id;
+    const filePath = e.target.closest("div").id;
     const serverPathLength = props.selectedStudy.server_path.length;
     const filePathWithoutServerPath = filePath.slice(serverPathLength + 1);
     const filePathWithoutServerPathArray = filePathWithoutServerPath.split("/");
@@ -238,18 +239,48 @@ const IngestionStart = (props) => {
   };
   //
 
+  // Remove a directory from the list
+  const removeDirectoryFromSelectedHandler = (e) => {
+    const filePath = e.target.closest("div").id;
+
+    console.log("removing this video", filePath, props.selectedDirectories);
+
+    // props.setSelectedDirectories((prevState) => {
+    // prevState.filter((directory) => directory !== filePath);
+    // prevState.filter((info) => info.fullPath !== filePath);
+    // });
+
+    props.setSelectedDirectories((prevState) =>
+      // prevState.filter((info) => info.fileName !== inputName)
+      prevState.filter((info) => info.fullPath !== filePath)
+    );
+  };
+  //
+
   // Selected Directories JSX
   const DUMMY_SELECTED_DIRECTORIES_JSX = props.selectedDirectories.map(
     (item) => {
       return (
-        <p
-          className="text-xs hover:underline hover:cursor-pointer"
+        <div
           key={item.fullPath}
           id={item.fullPath}
-          onClick={selectedDirectoryClickHandler}
+          className="flex items-center gap-2"
         >
-          {item.fullPath}
-        </p>
+          <button onClick={removeDirectoryFromSelectedHandler}>
+            <FontAwesomeIcon
+              icon="fa-x"
+              size="sm"
+              className="dark:text-cardLight hover:dark:text-salmonRed"
+            />
+          </button>
+          <p
+            className="text-xs hover:underline hover:cursor-pointer"
+            // id={item.fullPath}
+            onClick={selectedDirectoryClickHandler}
+          >
+            {item.fullPath}
+          </p>
+        </div>
       );
     }
   );
@@ -257,6 +288,10 @@ const IngestionStart = (props) => {
   // //
 
   // // CONTROLS // //
+  const deselectAllDirectoriesHandler = () => {
+    props.setSelectedDirectories([]);
+  };
+
   const continueHandler = () => {
     // props.setIsAtStart(false);
     console.log("clicked continue!", props.selectedDirectories);
@@ -322,6 +357,14 @@ const IngestionStart = (props) => {
                 <div className="mt-4">
                   <p className="mb-2">Selected Directories:</p>
                   {DUMMY_SELECTED_DIRECTORIES_JSX}
+                  {props.selectedDirectories.length !== 0 && (
+                    <button
+                      className="mt-4 px-3 py-2 border-2 border-blackTextLight dark:border-white rounded text-sm hover:bg-lilacBlue hover:text-white dark:hover:text-blackTextLight"
+                      onClick={deselectAllDirectoriesHandler}
+                    >
+                      Unselect All
+                    </button>
+                  )}
                 </div>
               </div>
             )}

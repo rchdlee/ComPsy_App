@@ -4,10 +4,12 @@ import IngestionMetadata from "./IngestionMetadata";
 import LoadScreen from "./LoadScreen";
 import { useState } from "react";
 import { useEffect } from "react";
+import IngestionMetadata2 from "./IngestionMetadata2";
 
 const Ingestion = (props) => {
   // State for STEP 1 - IngestionStart
   const [isAtStart, setIsAtStart] = useState(true);
+  // const [isAtStart, setIsAtStart] = useState(false);
   const [availableStudies, setAvailableStudies] = useState(null);
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [filePath, setFilePath] = useState([]);
@@ -16,8 +18,10 @@ const Ingestion = (props) => {
 
   // State for STEP 2 - IngestionSelect
   const [videoListFull, setVideoListFull] = useState(null);
+  // const [videoListFull, setVideoListFull] = useState([]);
   const [videoListSelected, setVideoListSelected] = useState([]);
   const [hasSelectedVideos, setHasSelectedVideos] = useState(false);
+  // const [hasSelectedVideos, setHasSelectedVideos] = useState(true);
   //
 
   // State for STEP 3 - IngestionMetadata
@@ -25,7 +29,6 @@ const Ingestion = (props) => {
   //
 
   // // STEP 1 - IngestionStart //
-
   // DUMMY available files based on selected study
   const DUMMY_FILE_EXPLORER_firststudy = [
     {
@@ -375,38 +378,123 @@ const Ingestion = (props) => {
       const allStudies = await fetchStudies();
 
       // console.log(selfID, allStudies, "😶");
-      const availableStudies = allStudies.filter((study) =>
-      study.users.includes(selfID)
+      const availableStudies = allStudies?.filter((study) =>
+        study.users.includes(selfID)
       );
-      
+
       // console.log(availableStudies, "🥶");
       setAvailableStudies(availableStudies);
     };
     filterStudies();
   }, []);
   //
-  
+
   // // STEP 2 // //
-  
+
+  // const DUMMY_VIDEO_LIST_FROM_API = [
+  //   "video1",
+  //   "video2",
+  //   "video3",
+  //   "video4",
+  //   "video5",
+  //   "video6",
+  //   "video7",
+  //   "video8",
+  //   "video9",
+  //   "video10",
+  //   "video11",
+  // ];
+
   const DUMMY_VIDEO_LIST_FROM_API = [
-    "video1",
-    "video2",
-    "video3",
-    "video4",
-    "video5",
-    "video6",
-    "video7",
-    "video8",
-    "video9",
-    "video10",
-    "video11",
+    {
+      fullPath: "path/1/2/video1.mp4",
+    },
+    {
+      fullPath: "path/1/2/video2.mp4",
+    },
+    {
+      fullPath: "path/1/2/video3.mov",
+    },
+    {
+      fullPath: "path/1/2/audio2point5.aac",
+    },
+    {
+      fullPath: "path/a/b/video4.mov",
+    },
+    {
+      fullPath: "path/a/b/audio5.mp3",
+    },
+    {
+      fullPath: "path/a/b/video6.mp4",
+    },
+    { fullPath: "path/c/d/e/video7.avi" },
+    { fullPath: "path/c/d/e/audio8.flac" },
   ];
-  
+
+  // move to separate json  -- work with backend
+  const videoTypes = ["mp4", "mpeg", "avi", "mkv", "mov"];
+  const audioTypes = ["mp3", "wav", "aac", "ogg", "flac", "m4a", "aiff"];
+
+  // helper function
+  function groupBy(arr, property) {
+    return arr.reduce(function (memo, x) {
+      if (!memo[x[property]]) {
+        memo[x[property]] = [];
+      }
+      memo[x[property]].push(x);
+      return memo;
+    }, {});
+  }
+  //
+
   // Retrieve videos from selected directories -- DUMMY
   const fetchVideosFromDirectories = () => {
     console.log("fetching videos");
+
+    const DUMMY_CLEANUP = DUMMY_VIDEO_LIST_FROM_API.map((file) => {
+      const pathArray = file.fullPath.split("/");
+      const pathLength = pathArray.length;
+      const name = pathArray[pathLength - 1];
+
+      const extension = name.split(".")[1];
+
+      const directory = pathArray.slice(0, -1).join("/");
+
+      let fileType;
+      if (videoTypes.includes(extension)) {
+        fileType = "video";
+      }
+      if (audioTypes.includes(extension)) {
+        fileType = "audio";
+      }
+
+      return {
+        ...file,
+        name: name,
+        directory: directory,
+        extension: extension,
+        fileType: fileType,
+      };
+      // file.name = name;
+      // file.extension = extension;
+    });
+
+    const DUMMY_CLEANUP2 = groupBy(DUMMY_CLEANUP, "directory");
+
+    const DUMMY_CLEANUP3 = Object.entries(DUMMY_CLEANUP2).map(
+      ([key, value]) => {
+        return {
+          directory: key,
+          files: value,
+        };
+      }
+    );
+
+    console.log(DUMMY_CLEANUP, DUMMY_CLEANUP2, DUMMY_CLEANUP3, "🤖");
+
     setTimeout(() => {
-      setVideoListFull(DUMMY_VIDEO_LIST_FROM_API);
+      // setVideoListFull(DUMMY_VIDEO_LIST_FROM_API);
+      setVideoListFull(DUMMY_CLEANUP3);
     }, 1000);
   };
 
@@ -431,7 +519,7 @@ const Ingestion = (props) => {
         },
         {
           name: "Session",
-          type: "input",
+          type: "text",
           options: null,
           value: "test 1 session",
         },
@@ -441,7 +529,7 @@ const Ingestion = (props) => {
           options: ["Interested", "Not Interested"],
           value: "",
         },
-        { name: "Administration", type: "input", options: null, value: "" },
+        { name: "Administration", type: "text", options: null, value: "" },
         { name: "Device", type: "input", options: null, value: "" },
       ],
     },
@@ -511,6 +599,295 @@ const Ingestion = (props) => {
     },
   ];
 
+  const DUMMY_MISSING_METADATA_NEW = {
+    fields: [
+      { name: "Subject", required: true },
+      { name: "Session", required: false },
+      { name: "Task", required: true },
+      { name: "Condition", required: false },
+      { name: "Target", required: false },
+      { name: "Run", required: false },
+      { name: "Device", required: false },
+      { name: "Channel", required: false },
+      { name: "Modality", required: true },
+      { name: "Notes", required: false },
+    ],
+    metadata: [
+      {
+        fileName: "file1.ext",
+        fileID: "123A",
+        study: "Study A",
+        fields: [
+          {
+            name: "Subject",
+            type: "text",
+            options: null,
+            value: "",
+            required: true,
+          },
+          {
+            name: "Session",
+            type: "number",
+            options: null,
+            value: "",
+            required: false,
+          },
+          {
+            name: "Task",
+            type: "select",
+            options: ["1", "2", "3"],
+            value: "",
+            required: true,
+          },
+          {
+            name: "Condition",
+            type: "select",
+            options: [
+              "condition 1",
+              "condition 2",
+              "condition 3",
+              "condition 4",
+            ],
+            value: "condition 2",
+            required: false,
+          },
+          {
+            name: "Target",
+            type: "text",
+            options: null,
+            value: "",
+            required: false,
+          },
+          {
+            name: "Run",
+            type: "number",
+            options: null,
+            value: 3,
+            required: false,
+          },
+          {
+            name: "Device",
+            type: "select",
+            options: ["device 1", "device 2", "device 3", "device 4"],
+            value: "",
+            required: false,
+          },
+          {
+            name: "Channel",
+            type: "text",
+            options: null,
+            value: "",
+            required: false,
+          },
+          {
+            name: "Modality",
+            type: "select",
+            options: [
+              "RGB",
+              "RGBA",
+              "RGBD",
+              "RGBAD",
+              "depth",
+              "audio",
+              "other",
+            ],
+            value: "",
+            required: true,
+          },
+          {
+            name: "Notes",
+            type: "text",
+            options: null,
+            value: "",
+            required: false,
+          },
+        ],
+      },
+      {
+        fileName: "file2.ext",
+        fileID: "12345A",
+        study: "Study A",
+        fields: [
+          {
+            name: "Subject",
+            type: "text",
+            options: null,
+            value: "",
+            required: true,
+          },
+          {
+            name: "Session",
+            type: "number",
+            options: null,
+            value: "",
+            required: false,
+          },
+          {
+            name: "Task",
+            type: "select",
+            options: ["1", "2", "3", "4"],
+            value: "",
+            required: true,
+          },
+          {
+            name: "Condition",
+            type: "select",
+            options: [
+              "condition 1",
+              "condition 2",
+              "condition 3",
+              "condition 4",
+            ],
+            value: "condition 2",
+            required: false,
+          },
+          {
+            name: "Target",
+            type: "text",
+            options: null,
+            value: "",
+            required: false,
+          },
+          {
+            name: "Run",
+            type: "number",
+            options: null,
+            value: 3,
+            required: false,
+          },
+          {
+            name: "Device",
+            type: "select",
+            options: ["device 1", "device 2", "device 3", "device 4"],
+            value: "",
+            required: false,
+          },
+          {
+            name: "Channel",
+            type: "text",
+            options: null,
+            value: "channel A",
+            required: false,
+          },
+          {
+            name: "Modality",
+            type: "select",
+            options: [
+              "RGB",
+              "RGBA",
+              "RGBD",
+              "RGBAD",
+              "depth",
+              "audio",
+              "other",
+            ],
+            value: "",
+            required: true,
+          },
+          {
+            name: "Notes",
+            type: "text",
+            options: null,
+            value: "",
+            required: false,
+          },
+        ],
+      },
+      {
+        fileName: "file3.ext",
+        fileID: "123B",
+        study: "Study B",
+        fields: [
+          {
+            name: "Subject",
+            type: "text",
+            options: null,
+            value: "",
+            required: true,
+          },
+          {
+            name: "Session",
+            type: "number",
+            options: null,
+            value: "",
+            required: false,
+          },
+          {
+            name: "Task",
+            type: "select",
+            options: ["1", "2", "3"],
+            value: "",
+            required: true,
+          },
+          {
+            name: "Condition",
+            type: "select",
+            options: [
+              "condition 1",
+              "condition 2",
+              "condition 3",
+              "condition 4",
+            ],
+            value: "",
+            required: false,
+          },
+          {
+            name: "Target",
+            type: "text",
+            options: null,
+            value: "",
+            required: false,
+          },
+          {
+            name: "Run",
+            type: "number",
+            options: null,
+            value: "",
+            required: false,
+          },
+          {
+            name: "Device",
+            type: "select",
+            options: ["device 1", "device 2", "device 3", "device 4"],
+            value: "",
+            required: false,
+          },
+          {
+            name: "Channel",
+            type: "text",
+            options: null,
+            value: "",
+            required: false,
+          },
+          {
+            name: "Modality",
+            type: "select",
+            options: [
+              "RGB",
+              "RGBA",
+              "RGBD",
+              "RGBAD",
+              "depth",
+              "audio",
+              "other",
+            ],
+            value: "RGBD",
+            required: true,
+          },
+          {
+            name: "Notes",
+            type: "text",
+            options: null,
+            value: "",
+            required: false,
+          },
+        ],
+      },
+    ],
+  };
+
+  // const [metadata, setMetadata] = useState(DUMMY_MISSING_METADATA_NEW);
+
   // // RENDERS // //
 
   // initial load
@@ -575,6 +952,7 @@ const Ingestion = (props) => {
           setHasSelectedVideos={setHasSelectedVideos}
           setMetadata={setMetadata}
           DUMMY_MISSING_METADATA={DUMMY_MISSING_METADATA}
+          DUMMY_MISSING_METADATA_NEW={DUMMY_MISSING_METADATA_NEW}
           setIsAtStart={setIsAtStart}
           setHasError={props.setHasError}
           throwNewErrorModal={props.throwNewErrorModal}
@@ -596,11 +974,15 @@ const Ingestion = (props) => {
   // STEP 3 - IngestionMetadata
   if (!isAtStart && metadata) {
     return (
-      <IngestionMetadata
+      // <IngestionMetadata
+      //   metadata={metadata}
+      //   setIsAtStart={setIsAtStart}
+      //   setMetadata={setMetadata}
+      //   setHasSelectedVideos={setHasSelectedVideos}
+      // />
+      <IngestionMetadata2
         metadata={metadata}
-        setIsAtStart={setIsAtStart}
-        setMetadata={setMetadata}
-        setHasSelectedVideos={setHasSelectedVideos}
+        throwNewErrorModal={props.throwNewErrorModal}
       />
     );
   }

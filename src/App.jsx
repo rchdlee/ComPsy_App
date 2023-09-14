@@ -35,6 +35,9 @@ import {
   faEye,
   faEyeSlash,
   faCheck,
+  faVideo,
+  faMusic,
+  faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -80,7 +83,11 @@ function App() {
     faXmark,
     faEye,
     faEyeSlash,
-    faCheck
+    faCheck,
+    faVideo,
+    faMusic,
+    faChevronLeft,
+    faChevronRight
   );
 
   // DARK MODE //
@@ -131,6 +138,7 @@ function App() {
   //
 
   // function to throw a new error popup //
+  // types: 'login', 'app'
   const throwNewErrorModal = (message, type) => {
     setHasError(false);
     setErrorOffsetType(type);
