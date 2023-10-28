@@ -6,6 +6,8 @@ const IngestionStart = (props) => {
   // // Study Select // //
   const availableStudies = props.availableStudies;
 
+  // const [root, setRoot] = useState();
+
   const studyClickHandler = (e) => {
     const studyName = e.target.innerHTML;
     const selectedStudyData = props.availableStudies.filter(
@@ -15,7 +17,31 @@ const IngestionStart = (props) => {
     console.log(selectedStudyData, "😎");
 
     props.setSelectedStudy(selectedStudyData);
-    setFurthestDirectoryItem(DUMMY_DIRECTORY_FILES);
+
+    const fetchDirectories = async () => {
+      const percentEncodedURL = encodeURIComponent(
+        selectedStudyData.server_path
+      );
+      const response = await fetch(
+        // `http://localhost:8001/test/get_directory?path=${percentEncodedURL}`,
+        `http://localhost:8001/test/get_directory?path=${selectedStudyData.server_path}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        }
+      );
+      const data = await response.json();
+      setFurthestDirectoryItem(data);
+      props.setRoot(data);
+
+      console.log(data, "🎽");
+      return data;
+    };
+    const directoryItems = fetchDirectories();
+
+    // setFurthestDirectoryItem(DUMMY_DIRECTORY_FILES);
     props.setFilePath([]);
     props.setSelectedDirectories([]);
   };
@@ -43,13 +69,13 @@ const IngestionStart = (props) => {
   const DUMMY_DIRECTORY_FILES = props.fileExplorer;
 
   // state for the selected study's directory
-  const [furthestDirectoryItem, setFurthestDirectoryItem] = useState(
-    DUMMY_DIRECTORY_FILES
-  );
+  const [furthestDirectoryItem, setFurthestDirectoryItem] = useState();
+  // DUMMY_DIRECTORY_FILES
 
   // Navigate to the root folder in the directory when clicking its name in the path
   const rootPathClickHandler = () => {
-    setFurthestDirectoryItem(DUMMY_DIRECTORY_FILES);
+    // setFurthestDirectoryItem(DUMMY_DIRECTORY_FILES);
+    setFurthestDirectoryItem(props.root);
     props.setFilePath([]);
   };
   //
@@ -62,13 +88,9 @@ const IngestionStart = (props) => {
     }
     console.log(pathDepth, e.target.id, e.target.innerHTML, props.filePath);
     // const newFoldersToDisplay = availableStudies
-    let itemsToShow = DUMMY_DIRECTORY_FILES;
+    let itemsToShow = props.root;
     for (let i = 0; i < +e.target.id + 1; i++) {
-      console.log(`i = ${i}`);
-      itemsToShow = itemsToShow.filter(
-        (item) => item.name === props.filePath[i]
-      )[0].subFolders;
-      console.log(itemsToShow);
+      itemsToShow = itemsToShow[props.filePath[i]];
     }
     console.log(itemsToShow, "🤖");
     props.setFilePath((prevState) => prevState.slice(0, +e.target.id + 1));
@@ -79,19 +101,36 @@ const IngestionStart = (props) => {
   // Navigate inside a directory folder when clicking its name
   const fileClickHandler = (e) => {
     const index = e.target.closest("div").id;
-    const subFolders = furthestDirectoryItem[index].subFolders;
-    // const pathDepth = props.filePath.length;
+    const subFolders = furthestDirectoryItem[index];
+    const folderNames = Object.keys(furthestDirectoryItem[index]).filter(
+      (item) => item !== "files"
+    );
 
-    console.log("furthestdirectoryitem", furthestDirectoryItem);
-    const selectedItem = furthestDirectoryItem[index];
-
-    if (!subFolders) {
-      console.log("end of path");
+    if (folderNames.length === 0) {
       props.throwNewErrorModal("No more directories inside this folder", "app");
       return;
     }
 
-    props.setFilePath((prevState) => [...prevState, selectedItem.name]);
+    // const subFolders = furthestDirectoryItem[index].subFolders;
+    // // const pathDepth = props.filePath.length;
+
+    // console.log(
+    //   "furthestdirectoryitem",
+    //   furthestDirectoryItem,
+    //   "subfolders",
+    //   subFolders,
+    //   "foldernames",
+    //   folderNames
+    // );
+    // const selectedItem = furthestDirectoryItem[index];
+
+    // if (!subFolders) {
+    //   console.log("end of path");
+    //   props.throwNewErrorModal("No more directories inside this folder", "app");
+    //   return;
+    // }
+
+    props.setFilePath((prevState) => [...prevState, index]);
     setFurthestDirectoryItem(subFolders);
   };
   //
@@ -133,21 +172,21 @@ const IngestionStart = (props) => {
     const isChecked = e.target.checked;
     const inputName = e.target.closest("input").id;
     const filePathFull = `${props.selectedStudy.server_path}${
-      pathDepth === 0 ? "" : "/"
-    }${props.filePath.join("/")}/${inputName}`;
+      pathDepth === 0 ? "" : "\\"
+    }${props.filePath.join("\\")}\\${inputName}`;
 
-    console.log(e, pathDepth, isChecked, inputName, filePathFull);
+    console.log(pathDepth, isChecked, inputName, filePathFull);
     const filePathInfo = {
       fullPath: filePathFull,
       // fileName: inputName,
     };
 
     if (isChecked) {
-      console.log("just checked the box!");
+      // console.log("just checked the box!");
       props.setSelectedDirectories((prevState) => [...prevState, filePathInfo]);
     }
     if (!isChecked) {
-      console.log("just UNCHEKED the box!");
+      // console.log("just UNCHEKED the box!");
       props.setSelectedDirectories((prevState) =>
         // prevState.filter((info) => info.fileName !== inputName)
         prevState.filter((info) => info.fullPath !== filePathFull)
@@ -157,47 +196,56 @@ const IngestionStart = (props) => {
   //
 
   // File Explorer JSX
-  const DUMMY_FILE_EXPLORER_JSX = props.selectedStudy
-    ? furthestDirectoryItem.map((item, index) => {
-        const filePathFull = `${props.selectedStudy.server_path}${
-          pathDepth === 0 ? "" : "/"
-        }${props.filePath.join("/")}/${item.name}`;
+  const DUMMY_FILE_EXPLORER_JSX =
+    props.selectedStudy && furthestDirectoryItem
+      ? Object.keys(furthestDirectoryItem)
+          .filter((name) => name !== "files")
+          .map((item, index) => {
+            // })
+            // furthestDirectoryItem.map((item, index) => {
+            const filePathFull = `${props.selectedStudy.server_path}${
+              pathDepth === 0 ? "" : "\\"
+              // }${props.filePath.join("/")}/${item.name}`;
+            }${props.filePath.join("\\")}\\${item}`;
+            // console.log(item, filePathFull, "🎏");
 
-        // if (item.type === "folder") {
-        return (
-          <div
-            className="flex justify-between items-center flex-wrap"
-            key={index}
-          >
-            <div
-              className="group flex gap-3 items-center"
-              id={index}
-              onClick={fileClickHandler}
-            >
-              <FontAwesomeIcon icon="fa-folder" />
-              <p className="group-hover:underline group-hover:cursor-pointer">
-                {item.name}
-              </p>
-            </div>
-            <input
-              className="mt-0.5"
-              type="checkbox"
-              id={item.name}
-              // onClick={testInputClickHandler}
-              onChange={inputClickHandler}
-              checked={
-                !(
-                  props.selectedDirectories.filter(
-                    // (path) => path.fileName === item.name
-                    (path) => path.fullPath === filePathFull
-                  ).length === 0
-                )
-              }
-            />
-          </div>
-        );
-      })
-    : "";
+            // if (item.type === "folder") {
+            return (
+              <div
+                className="flex justify-between items-center flex-wrap"
+                key={index}
+              >
+                <div
+                  className="group flex gap-3 items-center"
+                  // id={index}
+                  id={item}
+                  onClick={fileClickHandler}
+                >
+                  <FontAwesomeIcon icon="fa-folder" />
+                  <p className="group-hover:underline group-hover:cursor-pointer">
+                    {/* {item.name} */}
+                    {item}
+                  </p>
+                </div>
+                <input
+                  className="mt-0.5"
+                  type="checkbox"
+                  id={item}
+                  // onClick={testInputClickHandler}
+                  onChange={inputClickHandler}
+                  checked={
+                    !(
+                      props.selectedDirectories.filter(
+                        // (path) => path.fileName === item.name
+                        (path) => path.fullPath === filePathFull
+                      ).length === 0
+                    )
+                  }
+                />
+              </div>
+            );
+          })
+      : "";
   //
 
   // Navigate to the parent folder of a selected directory on click
@@ -206,35 +254,47 @@ const IngestionStart = (props) => {
     const filePath = e.target.closest("div").id;
     const serverPathLength = props.selectedStudy.server_path.length;
     const filePathWithoutServerPath = filePath.slice(serverPathLength + 1);
-    const filePathWithoutServerPathArray = filePathWithoutServerPath.split("/");
+    const filePathWithoutServerPathArray =
+      filePathWithoutServerPath.split("\\");
 
     const pathLength = filePathWithoutServerPathArray.length;
 
-    let parentFolder = props.fileExplorer;
+    // console.log(
+    //   filePath,
+    //   serverPathLength,
+    //   filePathWithoutServerPath,
+    //   filePathWithoutServerPathArray,
+    //   pathLength
+    // );
+
+    let parentFolder = props.root;
     for (let i = 0; i < pathLength - 1; i++) {
-      if (i === 0) {
-        parentFolder = parentFolder.filter(
-          (item) => item.name === filePathWithoutServerPathArray[i]
-        )[0];
-      }
-      if (i > 0) {
-        parentFolder = parentFolder.subFolders.filter(
-          (item) => item.name === filePathWithoutServerPathArray[i]
-        )[0];
-      }
+      parentFolder = parentFolder[filePathWithoutServerPathArray[i]];
+      // if (i === 0) {
+      //   parentFolder = parentFolder.filter(
+      //     (item) => item.name === filePathWithoutServerPathArray[i]
+      //   )[0];
+      // }
+      // if (i > 0) {
+      //   parentFolder = parentFolder.subFolders.filter(
+      //     (item) => item.name === filePathWithoutServerPathArray[i]
+      //   )[0];
+      // }
     }
 
     filePathWithoutServerPathArray.pop();
-    const subFolders = parentFolder.subFolders;
+    // console.log(parentFolder, filePathWithoutServerPathArray);
+    // const subFolders = parentFolder.subFolders;
 
-    if (!subFolders) {
-      console.log("no subfolders");
-      setFurthestDirectoryItem(parentFolder);
-      props.setFilePath(filePathWithoutServerPathArray);
-      return;
-    }
+    // if (!subFolders) {
+    //   console.log("no subfolders");
+    //   setFurthestDirectoryItem(parentFolder);
+    //   props.setFilePath(filePathWithoutServerPathArray);
+    //   return;
+    // }
 
-    setFurthestDirectoryItem(subFolders);
+    setFurthestDirectoryItem(parentFolder);
+    // setFurthestDirectoryItem(subFolders);
     props.setFilePath(filePathWithoutServerPathArray);
   };
   //
@@ -313,7 +373,8 @@ const IngestionStart = (props) => {
       return;
     }
 
-    props.setFilePath([]);
+    // props.setFilePath([]);
+    // setFurthestDirectoryItem(root);
     props.setHasError(false);
     props.setIsAtStart(false);
     props.fetchVideos();

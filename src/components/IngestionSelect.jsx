@@ -42,6 +42,8 @@ const IngestionSelect = (props) => {
   //   );
   // });
 
+  console.log(props.root, props.selecteDirectories, '🧶');
+
   // list of files UPDATED (with new)
   const fileList = props.videoListFull.map((category) => {
     const videoFiles = category.files.filter(

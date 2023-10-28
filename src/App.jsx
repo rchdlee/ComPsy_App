@@ -124,7 +124,7 @@ function App() {
             return;
           }
           const data = await response.json();
-          console.log(data, "🐱‍🐉");
+          // console.log(data, "🐱‍🐉");
           const name = `${data.first_name} ${data.last_name}`;
           setName(name);
           localStorage.setItem("selfID", data.id);

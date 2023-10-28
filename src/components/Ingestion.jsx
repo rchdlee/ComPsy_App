@@ -14,6 +14,7 @@ const Ingestion = (props) => {
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [filePath, setFilePath] = useState([]);
   const [selectedDirectories, setSelectedDirectories] = useState([]);
+  const [root, setRoot] = useState();
   //
 
   // State for STEP 2 - IngestionSelect
@@ -30,6 +31,7 @@ const Ingestion = (props) => {
 
   // // STEP 1 - IngestionStart //
   // DUMMY available files based on selected study
+
   const DUMMY_FILE_EXPLORER_firststudy = [
     {
       name: "participant_data_firststudy",
@@ -450,6 +452,80 @@ const Ingestion = (props) => {
   // Retrieve videos from selected directories -- DUMMY
   const fetchVideosFromDirectories = () => {
     console.log("fetching videos");
+
+    const selectedDirectoriesNoServerPathArray = selectedDirectories.map(
+      (name) => {
+        return name.fullPath
+          .slice(selectedStudy.server_path.length + 1)
+          .split("\\");
+      }
+    );
+
+    const directories = selectedDirectoriesNoServerPathArray.map((array) => {
+      const pathDepth = array.length;
+      let directory = root;
+      for (let i = 0; i < pathDepth; i++) {
+        directory = directory[array[i]];
+      }
+      return directory;
+    });
+
+    console.log(directories, "🎎");
+
+    const files = directories.map((directory) => {
+      return directory.files;
+    });
+
+    const fileArray = [];
+
+    const files2 = directories.map((directory) => {
+      // if (directory.length === 1) {
+      //   console.log("directory one file", directory.files);
+      //   directory.files.forEach((file) => {
+      //     fileArray.push(file);
+      //   });
+      // }
+
+      directory.files.forEach((file) => {
+        fileArray.push(file);
+      });
+
+      const directoriesWithNoFiles = Object.entries(directory).filter(
+        (folder) => !folder.includes("files")
+      );
+
+      directoriesWithNoFiles.forEach((file) => {
+        
+      })
+
+      return directoriesWithNoFiles;
+    });
+
+    console.log(files2, "🧨", fileArray);
+
+    // const files = directories.map((directory) => {
+    //   const allFilesTest = [];
+
+    //   if (directory.files.length > 0) {
+    //     console.log("main directory has files");
+    //     allFilesTest.push(directory.files);
+    //   }
+
+    //   if (directory.files.length === 0) {
+    //     console.log("main directory does not have files");
+    //   }
+
+    //   if (directory.length > 1) {
+    //     const { files, ...rest } = Object.assign({}, directory);
+
+    //     rest.map((child) => {
+    //       allFilesTest.push(child.files);
+    //     });
+    //   }
+    //   // return directory.files;
+    // });
+
+    console.log(files, "🎃");
 
     const DUMMY_CLEANUP = DUMMY_VIDEO_LIST_FROM_API.map((file) => {
       const pathArray = file.fullPath.split("/");
@@ -921,6 +997,8 @@ const Ingestion = (props) => {
           setSelectedDirectories={setSelectedDirectories}
           throwNewErrorModal={props.throwNewErrorModal}
           setHasError={props.setHasError}
+          root={root}
+          setRoot={setRoot}
         />
       </div>
     );
